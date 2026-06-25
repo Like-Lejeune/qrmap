@@ -1,0 +1,10 @@
+# ===== MODE SAAS (multi-tenant) — par défaut =====
+TENANCY_MODE=multi
+
+# ===== MODE ENTREPRISE DÉDIÉE (single-tenant) =====
+# TENANCY_MODE=single
+# TENANCY_ORG_NAME="Hôpital Central de Yaoundé"
+# TENANCY_OWNER_ID=1
+# DB_DATABASE=qrmap_hopital_yaounde
+# DB_USERNAME=qrmap_hopital
+# DB_PASSWORD=••••••••
