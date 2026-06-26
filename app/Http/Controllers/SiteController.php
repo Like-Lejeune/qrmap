@@ -60,7 +60,7 @@ class SiteController extends Controller
  
     public function destroy(Site $site)
     {
-        $site->delete();
-        return redirect()->route('sites.index')->with('success', 'Site supprimé.');
+        // $site->delete();
+        // return redirect()->route('sites.index')->with('success', 'Site supprimé.');
     }
 }
