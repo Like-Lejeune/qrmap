@@ -10,11 +10,6 @@ use Illuminate\Http\Request;
  
 class SiteController extends Controller
 {
-    public function index()
-    {
-        // $sites = Site::withCount(['buildings', 'qrCodes'])->paginate(20);
-        // return view('sites.index', compact('sites'));
-    }
  
     public function create()
     {
@@ -58,9 +53,4 @@ class SiteController extends Controller
         return redirect()->route('sites.show', $site)->with('success', 'Site mis à jour.');
     }
  
-    public function destroy(Site $site)
-    {
-        // $site->delete();
-        // return redirect()->route('sites.index')->with('success', 'Site supprimé.');
-    }
 }
