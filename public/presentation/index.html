@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:#06070a;}
+  @keyframes scanline{0%{transform:translateY(-130%);}100%{transform:translateY(130%);}}
+  @keyframes pulseGlow{0%,100%{opacity:.5;}50%{opacity:1;}}
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+  @keyframes tapPulse{0%,100%{transform:scale(1);opacity:.9;}50%{transform:scale(1.12);opacity:1;}}
+</style>
+</helmet>
+
+<div style="position:fixed;inset:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:#06070a;font-family:'Space Grotesk',sans-serif;">
+<div style="position:relative;height:100vh;aspect-ratio:9/16;max-width:100vw;overflow:hidden;background:#0d0f14;color:#e8eae6;background-image:radial-gradient(circle at 50% 30%, rgba(79,255,176,.10), rgba(13,15,20,0) 52%), radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);background-size:auto, 28px 28px;">
+
+  <!-- ===== SLIDE 1 — PERDU ? ===== -->
+  <div style="{{ s0 }}">
+    <div style="{{ f1 }}">
+      <svg width="min(40vh,260px)" viewBox="0 0 240 220" fill="none" style="display:block;margin:0 auto;animation:floaty 6s ease-in-out infinite;">
+        <path d="M30 44h54l-13-13M30 44l-13 13" stroke="#39414f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M156 34h54l-13-13M156 34l-13 13" stroke="#39414f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M196 100l-13 24M196 100l16 6M196 100l-2 18" stroke="#39414f" stroke-width="3" stroke-linecap="round"/>
+        <path d="M40 120l16 22M40 120l-4 18M40 120l18-2" stroke="#39414f" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="120" cy="150" r="20" stroke="#4fffb0" stroke-width="3"/>
+        <path d="M114 144a6 6 0 0111 3c0 4-5 4-5 8" stroke="#4fffb0" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="120" cy="166" r="1.8" fill="#4fffb0"/>
+        <path d="M104 200c0-12 7-20 16-20s16 8 16 20" stroke="#4fffb0" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div style="{{ f4 }}"><h1 style="font-weight:700;font-size:clamp(46px,9.5vh,100px);letter-spacing:-.04em;text-align:center;margin-top:6vh;color:#f2f4f0;">Perdu ?</h1></div>
+    <div style="{{ f6 }}"><p style="font-size:clamp(17px,2.4vh,24px);color:#8a93a3;text-align:center;margin-top:18px;max-width:20ch;">Dans un grand bâtiment, on ne sait jamais vraiment où aller.</p></div>
+  </div>
+
+  <!-- ===== SLIDE 2 — PLUS JAMAIS ===== -->
+  <div style="{{ s1 }}">
+    <div style="{{ f1 }}"><h1 style="font-weight:700;font-size:clamp(44px,9vh,94px);letter-spacing:-.04em;text-align:center;color:#f2f4f0;">Plus jamais.</h1></div>
+    <div style="{{ f5 }}"><div style="display:flex;align-items:center;gap:16px;justify-content:center;margin-top:7vh;">
+      <svg width="52" height="52" viewBox="0 0 48 48" fill="none">
+        <rect x="3" y="3" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.6"/><rect x="7.5" y="7.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+        <rect x="32" y="3" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.6"/><rect x="36.5" y="7.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+        <rect x="3" y="32" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.6"/><rect x="7.5" y="36.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+        <rect x="21" y="6" width="4" height="4" rx="1" fill="#3a4150"/><rect x="21" y="14" width="4" height="4" rx="1" fill="#3a4150"/><rect x="6" y="21" width="4" height="4" rx="1" fill="#3a4150"/><rect x="14" y="21" width="4" height="4" rx="1" fill="#3a4150"/>
+        <path d="M40 28c-4 0-7 3-7 7 0 5 7 11 7 11s7-6 7-11c0-4-3-7-7-7z" fill="#4fffb0"/><circle cx="40" cy="35" r="2.6" fill="#0d0f14"/>
+      </svg>
+      <span style="font-size:clamp(30px,6vh,50px);font-weight:700;letter-spacing:-.02em;">QR<span style="color:#4fffb0;">Map</span></span>
+    </div></div>
+    <div style="{{ f7 }}"><p style="font-size:clamp(20px,3vh,30px);color:#cdd2cb;text-align:center;margin-top:24px;">Trouvez votre chemin, en un scan.</p></div>
+  </div>
+
+  <!-- ===== SLIDE 3 — ÉTAPE 1 SCANNEZ ===== -->
+  <div style="{{ s2 }}">
+    <div style="{{ f1 }}"><div style="font-family:'Space Mono',monospace;font-size:clamp(15px,2.4vh,20px);letter-spacing:.3em;color:#4fffb0;text-align:center;">ÉTAPE 1</div></div>
+    <div style="{{ f3 }}">
+      <div style="position:relative;width:min(40vh,300px);margin:5vh auto 0;">
+        <!-- wall QR sign -->
+        <div style="background:#11151c;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:12px;">
+          <svg width="96" height="96" viewBox="0 0 48 48" fill="none">
+            <rect x="4" y="4" width="14" height="14" rx="3" stroke="#4fffb0" stroke-width="2.6"/><rect x="30" y="4" width="14" height="14" rx="3" stroke="#4fffb0" stroke-width="2.6"/><rect x="4" y="30" width="14" height="14" rx="3" stroke="#4fffb0" stroke-width="2.6"/>
+            <rect x="30" y="30" width="5" height="5" fill="#4fffb0"/><rect x="39" y="30" width="5" height="5" fill="#4fffb0"/><rect x="30" y="39" width="5" height="5" fill="#4fffb0"/><rect x="39" y="39" width="5" height="5" fill="#4fffb0"/>
+          </svg>
+          <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.18em;color:#5d6675;">QRMap · ENTRÉE</span>
+        </div>
+        <!-- phone scanning overlay -->
+        <div style="position:absolute;right:-10%;bottom:-16%;width:120px;height:230px;border:3px solid #2a313d;border-radius:26px;background:#0d0f14;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+          <svg width="56" height="56" viewBox="0 0 48 48" fill="none" style="opacity:.55;">
+            <rect x="6" y="6" width="12" height="12" rx="2" stroke="#4fffb0" stroke-width="2.4"/><rect x="30" y="6" width="12" height="12" rx="2" stroke="#4fffb0" stroke-width="2.4"/><rect x="6" y="30" width="12" height="12" rx="2" stroke="#4fffb0" stroke-width="2.4"/>
+          </svg>
+          <div style="position:absolute;left:0;right:0;height:30px;background:linear-gradient(180deg,rgba(79,255,176,0),rgba(79,255,176,.3));border-bottom:2px solid #4fffb0;animation:scanline 2.4s ease-in-out infinite;"></div>
+        </div>
+      </div>
+    </div>
+    <div style="{{ f6 }}"><h2 style="font-weight:600;font-size:clamp(26px,4.6vh,46px);letter-spacing:-.02em;text-align:center;margin-top:8vh;">Scannez le QR code.</h2></div>
+    <div style="{{ f8 }}"><p style="font-size:clamp(16px,2.3vh,22px);color:#4fffb0;text-align:center;margin-top:14px;">Aucune application à télécharger.</p></div>
+  </div>
+
+  <!-- ===== SLIDE 4 — ÉTAPE 2 CHOISISSEZ ===== -->
+  <div style="{{ s3 }}">
+    <div style="{{ f1 }}"><div style="font-family:'Space Mono',monospace;font-size:clamp(15px,2.4vh,20px);letter-spacing:.3em;color:#4fffb0;text-align:center;">ÉTAPE 2</div></div>
+    <div style="{{ f3 }}">
+      <div style="width:min(34vh,260px);margin:5vh auto 0;border:3px solid #2a313d;border-radius:30px;background:#0d0f14;padding:20px 16px;">
+        <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;color:#5d6675;text-align:center;margin-bottom:16px;">OÙ ALLEZ-VOUS ?</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:#14181f;border-radius:12px;padding:15px 18px;font-size:clamp(15px,2vh,18px);color:#cdd2cb;">Urgences</div>
+          <div style="background:#14181f;border-radius:12px;padding:15px 18px;font-size:clamp(15px,2vh,18px);color:#cdd2cb;">Pharmacie</div>
+          <div style="background:#0d0f14;border:2px solid #4fffb0;border-radius:12px;padding:15px 18px;font-size:clamp(15px,2vh,18px);color:#4fffb0;display:flex;align-items:center;justify-content:space-between;animation:pulseGlow 2.2s ease-in-out infinite;">Cardiologie
+            <span style="width:22px;height:22px;border-radius:50%;background:#4fffb0;display:inline-flex;align-items:center;justify-content:center;animation:tapPulse 1.8s ease-in-out infinite;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#0d0f14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+          <div style="background:#14181f;border-radius:12px;padding:15px 18px;font-size:clamp(15px,2vh,18px);color:#cdd2cb;">Sortie</div>
+        </div>
+      </div>
+    </div>
+    <div style="{{ f6 }}"><h2 style="font-weight:600;font-size:clamp(26px,4.6vh,46px);letter-spacing:-.02em;text-align:center;margin-top:7vh;">Choisissez où aller.</h2></div>
+    <div style="{{ f8 }}"><p style="font-size:clamp(16px,2.3vh,22px);color:#8a93a3;text-align:center;margin-top:14px;">Une simple liste. Touchez votre destination.</p></div>
+  </div>
+
+  <!-- ===== SLIDE 5 — ÉTAPE 3 SUIVEZ ===== -->
+  <div style="{{ s4 }}">
+    <div style="{{ f1 }}"><div style="font-family:'Space Mono',monospace;font-size:clamp(15px,2.4vh,20px);letter-spacing:.3em;color:#4fffb0;text-align:center;">ÉTAPE 3</div></div>
+    <div style="{{ f3 }}">
+      <div style="width:min(38vh,280px);margin:5vh auto 0;border:3px solid #2a313d;border-radius:30px;background:#0d0f14;padding:18px;position:relative;">
+        <div style="display:flex;align-items:center;gap:8px;background:#11151c;border-radius:10px;padding:10px 14px;margin-bottom:14px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h12M12 5l7 7-7 7" stroke="#4fffb0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-family:'Space Mono',monospace;font-size:13px;color:#4fffb0;">Tournez à droite</span>
+        </div>
+        <svg width="100%" height="240" viewBox="0 0 240 240" fill="none">
+          <rect x="14" y="14" width="96" height="70" rx="5" stroke="#222a36" stroke-width="2"/>
+          <rect x="128" y="14" width="98" height="48" rx="5" stroke="#222a36" stroke-width="2"/>
+          <rect x="128" y="78" width="98" height="80" rx="5" stroke="#222a36" stroke-width="2"/>
+          <rect x="14" y="100" width="96" height="58" rx="5" stroke="#222a36" stroke-width="2"/>
+          <rect x="14" y="174" width="212" height="52" rx="5" stroke="#222a36" stroke-width="2"/>
+          <path pathLength="1" d="M48 200 L48 130 L172 130 L172 38" stroke="#4fffb0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="{{ route }}"/>
+          <circle cx="48" cy="200" r="8" fill="#4fffb0"/>
+          <circle cx="172" cy="38" r="8" fill="none" stroke="#4fffb0" stroke-width="3"/>
+        </svg>
+        <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-top:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="2" stroke="#5d6675" stroke-width="1.8"/><path d="M9 7l3-2 3 2M9 17l3 2 3-2" stroke="#5d6675" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-family:'Space Mono',monospace;font-size:12px;color:#5d6675;">Étages & ascenseur gérés</span>
+        </div>
+      </div>
+    </div>
+    <div style="{{ f6 }}"><h2 style="font-weight:600;font-size:clamp(26px,4.6vh,46px);letter-spacing:-.02em;text-align:center;margin-top:5vh;">Suivez le guide.</h2></div>
+  </div>
+
+  <!-- ===== SLIDE 6 — CLÔTURE ===== -->
+  <div style="{{ s5 }}">
+    <div style="{{ f1 }}"><div style="display:flex;align-items:center;gap:18px;justify-content:center;">
+      <svg width="60" height="60" viewBox="0 0 48 48" fill="none">
+        <rect x="3" y="3" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.6"/><rect x="7.5" y="7.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+        <rect x="32" y="3" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.6"/><rect x="36.5" y="7.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+        <rect x="3" y="32" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.6"/><rect x="7.5" y="36.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+        <rect x="21" y="6" width="4" height="4" rx="1" fill="#3a4150"/><rect x="21" y="14" width="4" height="4" rx="1" fill="#3a4150"/><rect x="6" y="21" width="4" height="4" rx="1" fill="#3a4150"/><rect x="14" y="21" width="4" height="4" rx="1" fill="#3a4150"/>
+        <path d="M40 28c-4 0-7 3-7 7 0 5 7 11 7 11s7-6 7-11c0-4-3-7-7-7z" fill="#4fffb0"/><circle cx="40" cy="35" r="2.6" fill="#0d0f14"/>
+      </svg>
+      <span style="font-size:clamp(40px,8.5vh,76px);font-weight:700;letter-spacing:-.03em;">QR<span style="color:#4fffb0;">Map</span></span>
+    </div></div>
+    <div style="{{ f4 }}"><p style="font-size:clamp(20px,3.2vh,32px);text-align:center;color:#cdd2cb;margin-top:5vh;max-width:18ch;line-height:1.35;">Le GPS s'arrête à l'entrée. <span style="color:#4fffb0;">QRMap commence là.</span></p></div>
+    <div style="{{ f7 }}"><div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:7vh;">
+      <span style="font-size:clamp(20px,3.4vh,30px);font-weight:600;letter-spacing:-.02em;text-align:center;">Cherchez le QR code à l'entrée.</span>
+      <div style="width:120px;height:2px;background:#4fffb0;"></div>
+    </div></div>
+  </div>
+
+  <!-- ===== CONTROL BAR ===== -->
+  <div style="position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:12px;padding:18px 22px 22px;z-index:30;">
+    <div style="display:flex;gap:6px;">
+      <sc-for list="{{ segList }}" as="seg" hint-placeholder-count="6">
+        <div style="flex:1;height:3px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden;">
+          <div ref="{{ seg.ref }}" style="height:100%;width:0%;background:#4fffb0;"></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;color:#5d6675;white-space:nowrap;">{{ counter }}</span>
+      <div style="display:flex;align-items:center;gap:20px;">
+        <button onClick="{{ prev }}" style="background:none;border:none;color:#6b7585;cursor:pointer;font-size:20px;line-height:1;padding:4px;">‹</button>
+        <button onClick="{{ toggle }}" style="background:none;border:none;color:#4fffb0;cursor:pointer;font-size:13px;line-height:1;padding:4px;font-family:'Space Mono',monospace;">{{ playLabel }}</button>
+        <button onClick="{{ next }}" style="background:none;border:none;color:#6b7585;cursor:pointer;font-size:20px;line-height:1;padding:4px;">›</button>
+      </div>
+    </div>
+  </div>
+
+</div></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  state = { i: 0, anim: true, playing: true };
+  dwell = 10000;
+
+  constructor(props){
+    super(props);
+    this.segs = Array.from({length:6}, () => React.createRef());
+  }
+
+  componentDidMount(){
+    this.elapsed = 0;
+    this.last = performance.now();
+    setTimeout(() => this.setState({ anim: true }), 40);
+    this.raf = requestAnimationFrame(this.tick);
+    this._key = (e) => {
+      if (e.key === 'ArrowRight') this.next();
+      else if (e.key === 'ArrowLeft') this.prev();
+      else if (e.key === ' ' || e.key.toLowerCase() === 'p') { e.preventDefault(); this.toggle(); }
+    };
+    window.addEventListener('keydown', this._key);
+  }
+  componentWillUnmount(){
+    cancelAnimationFrame(this.raf);
+    clearTimeout(this._sw);
+    window.removeEventListener('keydown', this._key);
+  }
+
+  tick = (now) => {
+    const dt = now - this.last; this.last = now;
+    if (this.state.playing && !this._switching) this.elapsed += dt;
+    const p = Math.min(this.elapsed / this.dwell, 1);
+    this.segs.forEach((r, k) => {
+      if (!r.current) return;
+      r.current.style.width = (k < this.state.i ? 100 : k > this.state.i ? 0 : p * 100) + '%';
+    });
+    if (p >= 1 && this.state.playing && !this._switching) this.next();
+    this.raf = requestAnimationFrame(this.tick);
+  };
+
+  go(n){
+    const N = ((n % 6) + 6) % 6;
+    if (this._switching) return;
+    this._switching = true;
+    this.setState({ anim: false });
+    clearTimeout(this._sw);
+    this._sw = setTimeout(() => {
+      this.setState({ i: N });
+      this.elapsed = 0;
+      this.last = performance.now();
+      setTimeout(() => {
+        this.setState({ anim: true });
+        this._switching = false;
+      }, 40);
+    }, 600);
+  }
+  next(){ this.go(this.state.i + 1); }
+  prev(){ this.go(this.state.i - 1); }
+  toggle(){ this.setState(s => ({ playing: !s.playing })); }
+
+  renderVals(){
+    const { i, anim, playing } = this.state;
+    const fade = (d) => ({
+      opacity: anim ? 1 : 0,
+      transform: anim ? 'translateY(0px)' : 'translateY(28px)',
+      transition: `opacity 1s cubic-bezier(.2,.7,.2,1) ${d}s, transform 1s cubic-bezier(.2,.7,.2,1) ${d}s`,
+    });
+    const sec = (n) => ({
+      position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', padding: '9vh 26px 14vh', boxSizing: 'border-box',
+      opacity: i === n ? 1 : 0, transition: 'opacity .55s ease', pointerEvents: i === n ? 'auto' : 'none',
+    });
+    const draw = (dur, delay) => ({
+      strokeDasharray: 1, strokeDashoffset: anim ? 0 : 1,
+      transition: `stroke-dashoffset ${dur}s cubic-bezier(.4,.1,.2,1) ${delay}s`,
+    });
+    const out = {
+      playing,
+      playLabel: playing ? '❚❚' : '▶',
+      counter: String(i + 1).padStart(2, '0') + ' / 06',
+      segList: this.segs.map(r => ({ ref: r })),
+      route: draw(1.8, 0.6),
+      next: () => this.next(),
+      prev: () => this.prev(),
+      toggle: () => this.toggle(),
+    };
+    for (let k = 0; k < 10; k++) out['f' + k] = fade(k * 0.13);
+    for (let k = 0; k < 6; k++) out['s' + k] = sec(k);
+    return out;
+  }
+}
+</script>
+</body>
+</html>

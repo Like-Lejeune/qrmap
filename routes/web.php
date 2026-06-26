@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 // ── PUBLIC ───────────────────────────────
 // Page d'accueil = vitrine (accessible à tous)
 //Route::get('/', fn() => view('vitrine'))->name('home');
+Route::get('/pitch', function () {
+    return response()->file(public_path('pitch.html'));
+});
 Route::view('/', 'launch')->name('launch');
 Route::get('/', fn() => view('launch', ['demoUrl' => route('demo')]));
 Route::get('/demo', fn() => view('demo'))->name('demo');

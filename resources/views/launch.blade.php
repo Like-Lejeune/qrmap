@@ -74,10 +74,15 @@
 
     .done{margin-top:56px;border-radius:16px;border:1px solid color-mix(in srgb,var(--primary) 40%,transparent);background:color-mix(in srgb,var(--primary) 10%,transparent);padding:32px 40px;font-family:var(--display);font-size:clamp(1.5rem,4vw,1.875rem);font-weight:600;backdrop-filter:blur(6px)}
 
-    .cta{margin-top:40px;display:inline-flex;align-items:center;gap:10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--primary) 45%,transparent);background:color-mix(in srgb,var(--primary) 12%,transparent);color:#fff;font-family:var(--body);font-size:15px;font-weight:500;padding:14px 26px;text-decoration:none;backdrop-filter:blur(6px);transition:background .25s,border-color .25s,transform .25s,box-shadow .25s}
-    .cta:hover{background:color-mix(in srgb,var(--primary) 20%,transparent);border-color:var(--primary);transform:translateY(-2px);box-shadow:0 12px 30px -10px color-mix(in srgb,var(--primary) 50%,transparent)}
+    .cta-row{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .cta{display:inline-flex;align-items:center;gap:10px;border-radius:999px;font-family:var(--body);font-size:15px;font-weight:600;padding:14px 26px;text-decoration:none;backdrop-filter:blur(6px);transition:background .25s,border-color .25s,transform .25s,box-shadow .25s;border:1px solid transparent}
     .cta svg{width:18px;height:18px;transition:transform .25s}
-    .cta:hover svg{transform:translateX(3px)}
+    .cta:hover{transform:translateY(-2px)}
+    .cta-primary{background:var(--primary);color:#0d0f14;border-color:var(--primary)}
+    .cta-primary:hover{filter:brightness(1.08);box-shadow:0 12px 30px -10px color-mix(in srgb,var(--primary) 60%,transparent)}
+    .cta-ghost{background:color-mix(in srgb,var(--primary) 12%,transparent);border-color:color-mix(in srgb,var(--primary) 40%,transparent);color:#fff}
+    .cta-ghost:hover{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 18%,transparent)}
+    .cta-ghost:hover svg{transform:translateX(3px)}
     /* note infos + contact */
     .info-note{margin-top:22px;display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.55)}
     .info-note button{background:none;border:none;color:var(--primary);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0}
@@ -156,10 +161,16 @@
 
         <div class="done hidden" id="done">🎉 C'est lancé ! Bienvenue sur QRMap.</div>
 
-        <a class="cta" href="{{ $demoUrl ?? url('/demo') }}">
-            Découvrir la démo
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
+        <div class="cta-row">
+            <a class="cta cta-primary" href="{{ $presentationUrl ?? url('/presentation') }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Voir la présentation
+            </a>
+            <a class="cta cta-ghost" href="{{ $demoUrl ?? url('/demo') }}">
+                Essayer la démo
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+        </div>
 
         <div class="info-note">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>

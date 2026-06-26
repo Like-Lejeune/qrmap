@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script> D:\yves\travaux\Api_QrPlan\resources\js\support.js
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:#0d0f14;}
+  @keyframes scanline{0%{transform:translateY(-120%);}100%{transform:translateY(120%);}}
+  @keyframes pulseGlow{0%,100%{opacity:.5;}50%{opacity:.9;}}
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+</style>
+</helmet>
+
+<div style="position:fixed;inset:0;width:100vw;height:100vh;overflow:hidden;background:#0d0f14;font-family:'Space Grotesk',sans-serif;color:#e8eae6;background-image:radial-gradient(circle at 50% 18%, rgba(79,255,176,.10), rgba(13,15,20,0) 46%), radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px);background-size:auto, 30px 30px;">
+
+  <!-- ============ SLIDE 1 — ACCROCHE ============ -->
+  <div style="{{ s0 }}">
+    <div style="{{ f0 }}">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.4em;color:#5d6675;text-transform:uppercase;margin-bottom:42px;text-align:center;">Navigation intérieure</div>
+    </div>
+    <div style="{{ f1 }}">
+      <h1 style="font-weight:600;font-size:clamp(42px,6.4vw,104px);line-height:1.02;letter-spacing:-.03em;text-align:center;color:#f2f4f0;">Le GPS s'arrête à l'entrée.</h1>
+    </div>
+    <div style="{{ f3 }}">
+      <p style="font-weight:400;font-size:clamp(22px,2.8vw,42px);text-align:center;color:#4fffb0;margin-top:26px;letter-spacing:-.01em;">QRMap commence là.</p>
+    </div>
+    <div style="{{ f6 }}">
+      <div style="display:flex;align-items:center;gap:14px;margin-top:74px;">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none">
+          <rect x="3" y="3" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.4"/><rect x="7.5" y="7.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+          <rect x="32" y="3" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.4"/><rect x="36.5" y="7.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+          <rect x="3" y="32" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.4"/><rect x="7.5" y="36.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+          <rect x="21" y="6" width="4" height="4" rx="1" fill="#3a4150"/><rect x="21" y="14" width="4" height="4" rx="1" fill="#3a4150"/><rect x="6" y="21" width="4" height="4" rx="1" fill="#3a4150"/><rect x="14" y="21" width="4" height="4" rx="1" fill="#3a4150"/>
+          <path d="M40 28c-4 0-7 3-7 7 0 5 7 11 7 11s7-6 7-11c0-4-3-7-7-7z" fill="#4fffb0"/><circle cx="40" cy="35" r="2.6" fill="#0d0f14"/>
+        </svg>
+        <span style="font-size:30px;font-weight:700;letter-spacing:-.02em;">QR<span style="color:#4fffb0;">Map</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 2 — LE PROBLÈME ============ -->
+  <div style="{{ s1 }}">
+    <div style="position:absolute;top:8vh;right:7vw;opacity:.5;animation:floaty 6s ease-in-out infinite;">
+      <svg width="220" height="150" viewBox="0 0 220 150" fill="none">
+        <path d="M30 40h50l-12-12M30 40l-12 12" stroke="#39414f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M150 30h40l-10-10M150 30l-10 10" stroke="#39414f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M70 110h60l-12 12M70 110l-12-12" stroke="#39414f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M180 95l-12 22M180 95l14 6M180 95l-2 16" stroke="#39414f" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="108" cy="72" r="9" stroke="#4fffb0" stroke-width="2.4"/>
+        <text x="103" y="78" font-family="Space Mono, monospace" font-size="14" fill="#4fffb0">?</text>
+      </svg>
+    </div>
+    <div style="width:100%;max-width:1180px;">
+      <div style="{{ f0 }}"><div style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.34em;color:#4fffb0;text-transform:uppercase;">01 — Le problème</div></div>
+      <div style="{{ f1 }}"><h2 style="font-weight:600;font-size:clamp(34px,4.6vw,70px);line-height:1.05;letter-spacing:-.025em;margin-top:22px;max-width:14ch;">Se perdre à l'intérieur, ça coûte cher.</h2></div>
+      <div style="display:flex;gap:48px;flex-wrap:wrap;margin-top:64px;">
+        <div style="{{ f4 }}"><div style="display:flex;flex-direction:column;gap:10px;min-width:200px;border-left:1px solid rgba(255,255,255,.12);padding-left:22px;">
+          <div style="font-family:'Space Mono',monospace;font-size:clamp(40px,4.6vw,68px);font-weight:700;color:#f2f4f0;line-height:1;">~<span ref="{{ n0 }}">0</span><span style="font-size:.42em;color:#4fffb0;"> MIN</span></div>
+          <div style="font-size:15px;color:#8a93a3;max-width:22ch;">perdues à chercher son chemin dans un grand bâtiment.</div>
+        </div></div>
+        <div style="{{ f5 }}"><div style="display:flex;flex-direction:column;gap:10px;min-width:200px;border-left:1px solid rgba(255,255,255,.12);padding-left:22px;">
+          <div style="font-family:'Space Mono',monospace;font-size:clamp(40px,4.6vw,68px);font-weight:700;color:#f2f4f0;line-height:1;"><span ref="{{ n1 }}">0</span><span style="font-size:.42em;color:#4fffb0;"> %</span></div>
+          <div style="font-size:15px;color:#8a93a3;max-width:22ch;">des patients stressés avant un rendez-vous à l'hôpital.</div>
+        </div></div>
+        <div style="{{ f6 }}"><div style="display:flex;flex-direction:column;gap:10px;min-width:200px;border-left:1px solid rgba(255,255,255,.12);padding-left:22px;">
+          <div style="font-family:'Space Mono',monospace;font-size:clamp(40px,4.6vw,68px);font-weight:700;color:#f2f4f0;line-height:1;">1<span style="font-size:.42em;color:#8a93a3;"> SUR </span><span ref="{{ n2 }}">0</span></div>
+          <div style="font-size:15px;color:#8a93a3;max-width:22ch;">rendez-vous manqué à cause d'un retard ou d'une erreur de salle.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 3 — L'AMPLEUR ============ -->
+  <div style="{{ s2 }}">
+    <div style="width:100%;max-width:1120px;">
+      <div style="{{ f0 }}"><div style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.34em;color:#4fffb0;text-transform:uppercase;">02 — L'ampleur</div></div>
+      <div style="{{ f1 }}"><h2 style="font-weight:600;font-size:clamp(32px,4.2vw,62px);line-height:1.08;letter-spacing:-.025em;margin-top:22px;max-width:18ch;">Le GPS ne franchit pas la porte.<br>Le problème, lui, est <span style="color:#4fffb0;">partout.</span></h2></div>
+      <div style="{{ f3 }}"><div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:54px;">
+        <span style="font-family:'Space Mono',monospace;font-size:15px;color:#cdd2cb;border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:11px 20px;">Hôpitaux</span>
+        <span style="font-family:'Space Mono',monospace;font-size:15px;color:#cdd2cb;border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:11px 20px;">Banques</span>
+        <span style="font-family:'Space Mono',monospace;font-size:15px;color:#cdd2cb;border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:11px 20px;">Centres commerciaux</span>
+        <span style="font-family:'Space Mono',monospace;font-size:15px;color:#cdd2cb;border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:11px 20px;">Universités</span>
+        <span style="font-family:'Space Mono',monospace;font-size:15px;color:#cdd2cb;border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:11px 20px;">Administrations</span>
+      </div></div>
+      <div style="{{ f6 }}"><p style="font-size:clamp(17px,1.8vw,22px);color:#8a93a3;margin-top:48px;max-width:42ch;">Aucune solution simple n'existe aujourd'hui pour le visiteur lambda. On demande son chemin, ou on tourne en rond.</p></div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 4 — LA SOLUTION / LE GESTE ============ -->
+  <div style="{{ s3 }}">
+    <div style="width:100%;max-width:1200px;text-align:center;">
+      <div style="{{ f0 }}"><div style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.34em;color:#4fffb0;text-transform:uppercase;">03 — La solution</div></div>
+      <div style="{{ f1 }}"><h2 style="font-weight:600;font-size:clamp(40px,5.4vw,84px);letter-spacing:-.03em;margin-top:18px;">Un scan. C'est tout.</h2></div>
+      <div style="display:flex;justify-content:center;align-items:flex-start;gap:clamp(24px,4vw,72px);margin-top:60px;flex-wrap:wrap;">
+        <!-- step 1 scan -->
+        <div style="{{ f3 }}"><div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:200px;">
+          <div style="position:relative;width:128px;height:236px;border:2px solid #2a313d;border-radius:24px;background:#10131a;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+            <svg width="78" height="78" viewBox="0 0 48 48" fill="none">
+              <rect x="4" y="4" width="14" height="14" rx="3" stroke="#4fffb0" stroke-width="2.4"/><rect x="30" y="4" width="14" height="14" rx="3" stroke="#4fffb0" stroke-width="2.4"/><rect x="4" y="30" width="14" height="14" rx="3" stroke="#4fffb0" stroke-width="2.4"/>
+              <rect x="30" y="30" width="5" height="5" fill="#4fffb0"/><rect x="39" y="30" width="5" height="5" fill="#4fffb0"/><rect x="30" y="39" width="5" height="5" fill="#4fffb0"/><rect x="39" y="39" width="5" height="5" fill="#4fffb0"/>
+            </svg>
+            <div style="position:absolute;left:0;right:0;height:36px;background:linear-gradient(180deg,rgba(79,255,176,0),rgba(79,255,176,.28));border-bottom:2px solid #4fffb0;animation:scanline 2.6s ease-in-out infinite;"></div>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;color:#5d6675;">01</div>
+          <div style="font-size:15px;color:#cdd2cb;">On scanne le QR code affiché au mur.</div>
+        </div></div>
+        <!-- step 2 map -->
+        <div style="{{ f5 }}"><div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:200px;">
+          <div style="width:128px;height:236px;border:2px solid #2a313d;border-radius:24px;background:#10131a;overflow:hidden;padding:14px;">
+            <svg width="100%" height="100%" viewBox="0 0 100 200" fill="none">
+              <rect x="6" y="10" width="40" height="48" rx="3" stroke="#2f3744" stroke-width="2"/>
+              <rect x="54" y="10" width="40" height="30" rx="3" stroke="#2f3744" stroke-width="2"/>
+              <rect x="54" y="48" width="40" height="60" rx="3" stroke="#2f3744" stroke-width="2"/>
+              <rect x="6" y="68" width="40" height="40" rx="3" stroke="#2f3744" stroke-width="2"/>
+              <rect x="6" y="118" width="88" height="72" rx="3" stroke="#2f3744" stroke-width="2"/>
+            </svg>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;color:#5d6675;">02</div>
+          <div style="font-size:15px;color:#cdd2cb;">Le plan 2D du bâtiment s'affiche.</div>
+        </div></div>
+        <!-- step 3 route -->
+        <div style="{{ f7 }}"><div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:200px;">
+          <div style="width:128px;height:236px;border:2px solid #2a313d;border-radius:24px;background:#10131a;overflow:hidden;padding:14px;position:relative;">
+            <svg width="100%" height="100%" viewBox="0 0 100 200" fill="none">
+              <rect x="6" y="10" width="40" height="48" rx="3" stroke="#222a36" stroke-width="2"/>
+              <rect x="54" y="10" width="40" height="30" rx="3" stroke="#222a36" stroke-width="2"/>
+              <rect x="54" y="48" width="40" height="60" rx="3" stroke="#222a36" stroke-width="2"/>
+              <rect x="6" y="118" width="88" height="72" rx="3" stroke="#222a36" stroke-width="2"/>
+              <path pathLength="1" d="M26 176 L26 120 L74 120 L74 70 L40 70 L40 40" stroke="#4fffb0" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" style="{{ route }}"/>
+              <circle cx="26" cy="176" r="5" fill="#4fffb0"/>
+              <circle cx="40" cy="40" r="5" fill="none" stroke="#4fffb0" stroke-width="2.6"/>
+            </svg>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;color:#5d6675;">03</div>
+          <div style="font-size:15px;color:#cdd2cb;">L'itinéraire se trace jusqu'à la destination.</div>
+        </div></div>
+      </div>
+      <div style="{{ f9 }}"><p style="font-family:'Space Mono',monospace;font-size:14px;letter-spacing:.06em;color:#5d6675;margin-top:50px;">SANS TÉLÉCHARGEMENT · SANS APPLICATION À INSTALLER</p></div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 5 — LA TECHNO 2D & 3D ============ -->
+  <div style="{{ s4 }}">
+    <div style="width:100%;max-width:1200px;">
+      <div style="{{ f0 }}"><div style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.34em;color:#4fffb0;text-transform:uppercase;">04 — La technologie</div></div>
+      <div style="{{ f1 }}"><h2 style="font-weight:600;font-size:clamp(30px,3.8vw,56px);letter-spacing:-.025em;margin-top:18px;">2D pas à pas. 3D multi-étages.</h2></div>
+      <div style="display:flex;gap:32px;margin-top:46px;flex-wrap:wrap;">
+        <!-- 2D card -->
+        <div style="{{ f3 }}"><div style="flex:1;min-width:340px;background:#11151c;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:26px;position:relative;width:440px;">
+          <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;color:#5d6675;margin-bottom:18px;">PLAN 2D · INTERACTIF</div>
+          <svg width="100%" height="220" viewBox="0 0 380 220" fill="none">
+            <rect x="14" y="14" width="150" height="90" rx="4" stroke="#2a313d" stroke-width="1.6"/>
+            <rect x="180" y="14" width="186" height="60" rx="4" stroke="#2a313d" stroke-width="1.6"/>
+            <rect x="180" y="92" width="90" height="114" rx="4" stroke="#2a313d" stroke-width="1.6"/>
+            <rect x="14" y="120" width="150" height="86" rx="4" stroke="#2a313d" stroke-width="1.6"/>
+            <rect x="286" y="92" width="80" height="114" rx="4" stroke="#2a313d" stroke-width="1.6"/>
+            <path pathLength="1" d="M60 188 L60 130 L172 130 L172 44 L300 44 L300 110" stroke="#4fffb0" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" style="{{ route }}"/>
+            <circle cx="60" cy="188" r="6" fill="#4fffb0"/>
+            <circle cx="300" cy="110" r="6" fill="none" stroke="#4fffb0" stroke-width="2.6"/>
+          </svg>
+          <div style="position:absolute;right:26px;top:74px;display:flex;align-items:center;gap:8px;background:#0d0f14;border:1px solid #4fffb0;border-radius:8px;padding:7px 12px;animation:pulseGlow 2.4s ease-in-out infinite;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h12M12 5l7 7-7 7" stroke="#4fffb0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="font-family:'Space Mono',monospace;font-size:12px;color:#4fffb0;">Tournez à droite</span>
+          </div>
+        </div></div>
+        <!-- 3D card -->
+        <div style="{{ f5 }}"><div style="flex:1;min-width:340px;background:#11151c;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:26px;width:440px;">
+          <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;color:#5d6675;margin-bottom:18px;">VUE 3D · MULTI-ÉTAGES</div>
+          <svg width="100%" height="220" viewBox="0 0 380 220" fill="none">
+            <g stroke="#2a313d" stroke-width="1.6" fill="rgba(255,255,255,.015)">
+              <path d="M70 150 L240 150 L320 116 L150 116 Z"/>
+              <path d="M70 105 L240 105 L320 71 L150 71 Z"/>
+              <path d="M70 60 L240 60 L320 26 L150 26 Z"/>
+            </g>
+            <path pathLength="1" d="M110 150 L150 134 L150 105 L196 87 L196 60 L240 42" stroke="#4fffb0" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" style="{{ route3 }}"/>
+            <circle cx="110" cy="150" r="6" fill="#4fffb0"/>
+            <circle cx="240" cy="42" r="6" fill="none" stroke="#4fffb0" stroke-width="2.6"/>
+            <line x1="150" y1="134" x2="150" y2="105" stroke="#4fffb0" stroke-width="3.4" stroke-dasharray="2 5" stroke-linecap="round"/>
+            <text x="158" y="124" font-family="Space Mono, monospace" font-size="11" fill="#5d6675">↑ étage</text>
+          </svg>
+        </div></div>
+      </div>
+      <div style="{{ f7 }}"><p style="font-family:'Space Mono',monospace;font-size:14px;letter-spacing:.04em;color:#5d6675;margin-top:34px;">ITINÉRAIRE CALCULÉ AUTOMATIQUEMENT · PATHFINDING TEMPS RÉEL · ASCENSEUR & ESCALIERS</p></div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 6 — POUR QUI ============ -->
+  <div style="{{ s5 }}">
+    <div style="width:100%;max-width:1160px;">
+      <div style="{{ f0 }}"><div style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.34em;color:#4fffb0;text-transform:uppercase;">05 — Pour qui</div></div>
+      <div style="{{ f1 }}"><h2 style="font-weight:600;font-size:clamp(30px,4vw,60px);letter-spacing:-.025em;margin-top:18px;max-width:20ch;">Chaque bâtiment complexe est un client potentiel.</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:54px;">
+        <div style="{{ f3 }}"><div style="display:flex;align-items:center;gap:16px;background:#11151c;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:22px;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="#4fffb0" stroke-width="1.6"/><path d="M12 8v6M9 11h6" stroke="#4fffb0" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span style="font-size:17px;color:#e8eae6;">Hôpitaux</span>
+        </div></div>
+        <div style="{{ f4 }}"><div style="display:flex;align-items:center;gap:16px;background:#11151c;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:22px;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-5 9 5M5 9v9M19 9v9M9 9v9M15 9v9M3 20h18" stroke="#4fffb0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:17px;color:#e8eae6;">Banques</span>
+        </div></div>
+        <div style="{{ f5 }}"><div style="display:flex;align-items:center;gap:16px;background:#11151c;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:22px;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M6 8h12l-1 12H7L6 8zM9 8a3 3 0 016 0" stroke="#4fffb0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:17px;color:#e8eae6;">Centres commerciaux</span>
+        </div></div>
+        <div style="{{ f6 }}"><div style="display:flex;align-items:center;gap:16px;background:#11151c;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:22px;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 4L2 9l10 5 10-5-10-5zM6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5" stroke="#4fffb0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:17px;color:#e8eae6;">Universités</span>
+        </div></div>
+        <div style="{{ f7 }}"><div style="display:flex;align-items:center;gap:16px;background:#11151c;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:22px;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M21 16l-8-3V5.5a1.5 1.5 0 00-3 0V13l-8 3v2l8-2v3l-2 1.5V21l3.5-1 3.5 1v-1.5L13 18v-3l8 2v-1z" stroke="#4fffb0" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          <span style="font-size:17px;color:#e8eae6;">Aéroports</span>
+        </div></div>
+        <div style="{{ f8 }}"><div style="display:flex;align-items:center;gap:16px;background:#11151c;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:22px;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 21V8l8-4 8 4v13M4 21h16M9 21v-5h6v5M8 11h.01M12 11h.01M16 11h.01" stroke="#4fffb0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:17px;color:#e8eae6;">Administrations</span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 7 — CLÔTURE ============ -->
+  <div style="{{ s6 }}">
+    <div style="{{ f1 }}">
+      <div style="display:flex;align-items:center;gap:20px;justify-content:center;">
+        <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
+          <rect x="3" y="3" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.4"/><rect x="7.5" y="7.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+          <rect x="32" y="3" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.4"/><rect x="36.5" y="7.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+          <rect x="3" y="32" width="13" height="13" rx="3" stroke="#4fffb0" stroke-width="2.4"/><rect x="7.5" y="36.5" width="4" height="4" rx="1" fill="#4fffb0"/>
+          <rect x="21" y="6" width="4" height="4" rx="1" fill="#3a4150"/><rect x="21" y="14" width="4" height="4" rx="1" fill="#3a4150"/><rect x="6" y="21" width="4" height="4" rx="1" fill="#3a4150"/><rect x="14" y="21" width="4" height="4" rx="1" fill="#3a4150"/>
+          <path d="M40 28c-4 0-7 3-7 7 0 5 7 11 7 11s7-6 7-11c0-4-3-7-7-7z" fill="#4fffb0"/><circle cx="40" cy="35" r="2.6" fill="#0d0f14"/>
+        </svg>
+        <span style="font-size:clamp(44px,6vw,80px);font-weight:700;letter-spacing:-.03em;">QR<span style="color:#4fffb0;">Map</span></span>
+      </div>
+    </div>
+    <div style="{{ f4 }}"><p style="font-size:clamp(20px,2.4vw,34px);text-align:center;color:#cdd2cb;margin-top:36px;max-width:24ch;line-height:1.3;">Le GPS s'arrête à l'entrée. <span style="color:#4fffb0;">QRMap commence là.</span></p></div>
+    <div style="{{ f7 }}"><div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:54px;">
+      <span style="font-size:clamp(22px,2.6vw,36px);font-weight:600;letter-spacing:-.02em;">Rejoignez-nous.</span>
+      <div style="width:120px;height:2px;background:#4fffb0;"></div>
+    </div></div>
+    <div style="{{ f10 }}"><div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.3em;color:#3a4150;margin-top:64px;">QRMAP — 2026</div></div>
+  </div>
+
+  <!-- ============ CONTROL BAR ============ -->
+  <div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:24px;padding:20px 32px;z-index:30;">
+    <div style="display:flex;gap:6px;flex:1;">
+      <sc-for list="{{ segList }}" as="seg" hint-placeholder-count="7">
+        <div style="flex:1;height:2px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;">
+          <div ref="{{ seg.ref }}" style="height:100%;width:0%;background:#4fffb0;"></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:18px;">
+      <button onClick="{{ prev }}" style="background:none;border:none;color:#6b7585;cursor:pointer;font-size:18px;line-height:1;padding:4px;">‹</button>
+      <button onClick="{{ toggle }}" style="background:none;border:none;color:#4fffb0;cursor:pointer;font-size:12px;line-height:1;padding:4px;font-family:'Space Mono',monospace;">{{ playLabel }}</button>
+      <button onClick="{{ next }}" style="background:none;border:none;color:#6b7585;cursor:pointer;font-size:18px;line-height:1;padding:4px;">›</button>
+      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;color:#5d6675;min-width:62px;white-space:nowrap;text-align:right;">{{ counter }}</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  state = { i: 0, anim: false, playing: true };
+  dwell = 10000;
+
+  constructor(props){
+    super(props);
+    this.n0 = React.createRef();
+    this.n1 = React.createRef();
+    this.n2 = React.createRef();
+    this.segs = Array.from({length:7}, () => React.createRef());
+  }
+
+  componentDidMount(){
+    this.elapsed = 0;
+    this.last = performance.now();
+    requestAnimationFrame(() => this.setState({ anim: true }));
+    this.raf = requestAnimationFrame(this.tick);
+    this._key = (e) => {
+      if (e.key === 'ArrowRight') this.next();
+      else if (e.key === 'ArrowLeft') this.prev();
+      else if (e.key === ' ' || e.key.toLowerCase() === 'p') { e.preventDefault(); this.toggle(); }
+    };
+    window.addEventListener('keydown', this._key);
+  }
+  componentWillUnmount(){
+    cancelAnimationFrame(this.raf);
+    clearTimeout(this._sw);
+    window.removeEventListener('keydown', this._key);
+  }
+
+  tick = (now) => {
+    const dt = now - this.last; this.last = now;
+    if (this.state.playing && !this._switching) this.elapsed += dt;
+    const p = Math.min(this.elapsed / this.dwell, 1);
+    this.segs.forEach((r, k) => {
+      if (!r.current) return;
+      r.current.style.width = (k < this.state.i ? 100 : k > this.state.i ? 0 : p * 100) + '%';
+    });
+    if (this.state.i === 1) {
+      const cp = Math.min(this.elapsed / 1500, 1);
+      const e = 1 - Math.pow(1 - cp, 3);
+      if (this.n0.current) this.n0.current.textContent = Math.round(e * 30);
+      if (this.n1.current) this.n1.current.textContent = Math.round(e * 68);
+      if (this.n2.current) this.n2.current.textContent = Math.round(e * 6);
+    }
+    if (p >= 1 && this.state.playing && !this._switching) this.next();
+    this.raf = requestAnimationFrame(this.tick);
+  };
+
+  go(n){
+    const N = ((n % 7) + 7) % 7;
+    if (this._switching) return;
+    this._switching = true;
+    this.setState({ anim: false });
+    clearTimeout(this._sw);
+    this._sw = setTimeout(() => {
+      this.setState({ i: N });
+      this.elapsed = 0;
+      this.last = performance.now();
+      requestAnimationFrame(() => {
+        this.setState({ anim: true });
+        this._switching = false;
+      });
+    }, 600);
+  }
+  next(){ this.go(this.state.i + 1); }
+  prev(){ this.go(this.state.i - 1); }
+  toggle(){ this.setState(s => ({ playing: !s.playing })); }
+
+  renderVals(){
+    const { i, anim, playing } = this.state;
+    const fade = (d) => ({
+      opacity: anim ? 1 : 0,
+      transform: anim ? 'translateY(0px)' : 'translateY(26px)',
+      transition: `opacity 1s cubic-bezier(.2,.7,.2,1) ${d}s, transform 1s cubic-bezier(.2,.7,.2,1) ${d}s`,
+    });
+    const sec = (n) => ({
+      position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', padding: '8vh 8vw', boxSizing: 'border-box',
+      opacity: i === n ? 1 : 0, transition: 'opacity .55s ease', pointerEvents: i === n ? 'auto' : 'none',
+    });
+    const draw = (dur, delay) => ({
+      strokeDasharray: 1, strokeDashoffset: anim ? 0 : 1,
+      transition: `stroke-dashoffset ${dur}s cubic-bezier(.4,.1,.2,1) ${delay}s`,
+    });
+    const out = {
+      playing,
+      playLabel: playing ? '❚❚' : '▶',
+      counter: String(i + 1).padStart(2, '0') + ' / 07',
+      segList: this.segs.map(r => ({ ref: r })),
+      n0: this.n0, n1: this.n1, n2: this.n2,
+      route: draw(1.7, 0.5),
+      route3: draw(1.7, 0.7),
+      next: () => this.next(),
+      prev: () => this.prev(),
+      toggle: () => this.toggle(),
+    };
+    for (let k = 0; k < 12; k++) out['f' + k] = fade(k * 0.12);
+    for (let k = 0; k < 7; k++) out['s' + k] = sec(k);
+    return out;
+  }
+}
+</script>
+</body>
+</html>
