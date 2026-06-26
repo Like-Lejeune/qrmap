@@ -12,8 +12,8 @@ class SiteController extends Controller
 {
     public function index()
     {
-        $sites = Site::withCount(['buildings', 'qrCodes'])->paginate(20);
-        return view('sites.index', compact('sites'));
+        // $sites = Site::withCount(['buildings', 'qrCodes'])->paginate(20);
+        // return view('sites.index', compact('sites'));
     }
  
     public function create()

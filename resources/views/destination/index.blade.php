@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="breadcrumb">
-    <a href="{{ route('sites.index') }}">Sites</a>
+    <a href="#">Sites</a>
     <span class="sep">/</span>
     <a href="{{ route('sites.show', $building->site) }}">{{ $building->site->name }}</a>
     <span class="sep">/</span>

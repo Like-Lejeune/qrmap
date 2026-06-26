@@ -123,7 +123,7 @@
 <body>
 <nav>
     <a href="{{ route('dashboard') }}" class="nav-logo">QRMap</a>
-    <a href="{{ route('sites.index') }}" class="nav-link {{ request()->routeIs('sites.*','buildings.*','floors.*') ? 'active' : '' }}">Sites</a>
+    <a href="#" class="nav-link {{ request()->routeIs('sites.*','buildings.*','floors.*') ? 'active' : '' }}">Sites</a>
     <a href="{{ route('plan-editor.index') }}" class="nav-link {{ request()->routeIs('plan-editor.*') ? 'active' : '' }}">Éditeur</a>
     <a href="{{ route('qrcodes.index') }}" class="nav-link {{ request()->routeIs('qrcodes.*') && !request()->routeIs('qrcodes.print') ? 'active' : '' }}">QR Codes</a>
     <a href="{{ route('qrcodes.print') }}" class="nav-link {{ request()->routeIs('qrcodes.print') ? 'active' : '' }}">Impression</a>

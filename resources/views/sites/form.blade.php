@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="breadcrumb">
-    <a href="{{ route('sites.index') }}">Sites</a>
+    <a href="#">Sites</a>
     <span class="sep">/</span>
     <span>{{ isset($site) ? 'Éditer' : 'Nouveau' }}</span>
 </div>
@@ -47,7 +47,7 @@
         <hr class="divider">
         <div class="btn-actions">
             <button type="submit" class="btn btn-primary">{{ isset($site) ? 'Enregistrer' : 'Créer le site' }}</button>
-            <a href="{{ isset($site) ? route('sites.show', $site) : route('sites.index') }}" class="btn btn-outline">Annuler</a>
+            <a href="{{ isset($site) ? route('sites.show', $site) :  }}" class="btn btn-outline">Annuler</a>
         </div>
     </form>
 </div>
