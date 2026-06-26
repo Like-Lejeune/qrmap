@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/search', [SearchController::class, 'index'])->name('search');
  
     // Sites
-    Route::resource('sites', SiteController::class);
+    // Route::resource('sites', SiteController::class);
 
     Route::resource('buildings/{building}/floors/{floor}/destinations',
     DestinationController::class)->names('buildings.floors.destinations');

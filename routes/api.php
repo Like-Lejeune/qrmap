@@ -88,7 +88,7 @@ Route::prefix('v1')->group(function () {
         });
  
         // CRUD Sites
-        Route::apiResource('sites', \App\Http\Controllers\SiteController::class)->only(['show', 'store', 'update', 'destroy']);
+        Route::apiResource('sites', \App\Http\Controllers\SiteController::class)->only(['show', 'store', 'update']);
  
         // Générer un QR code via API
         Route::post('/qrcodes', function (Request $request) {
