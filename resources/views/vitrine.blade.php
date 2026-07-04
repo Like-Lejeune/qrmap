@@ -6,6 +6,26 @@
     <title>QRMap — Navigation intérieure 2D/3D</title>
     <meta name="description" content="Transformez un simple QR code en guide interactif 2D/3D. Sans GPS, sans application.">
 
+    <!-- Favicon (losange vert de la marque, SVG inline) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='25' y='25' width='50' height='50' fill='%230AAB6E' transform='rotate(45 50 50)'/%3E%3C/svg%3E">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://qrmap.app">
+    <meta property="og:site_name" content="QRMap">
+    <meta property="og:title" content="QRMap — Le GPS s'arrête à l'entrée. QRMap commence là.">
+    <meta property="og:description" content="Navigation intérieure sans application : scannez un QR code, suivez votre itinéraire pas à pas dans les hôpitaux, banques, universités, administrations et événements. Lancement le 6 juillet 2026.">
+    <meta property="og:image" content="https://qrmap.app/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="fr_FR">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="QRMap — Le GPS s'arrête à l'entrée. QRMap commence là.">
+    <meta name="twitter:description" content="Navigation intérieure sans application. Scannez, suivez, arrivez.">
+    <meta name="twitter:image" content="https://qrmap.app/og-image.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -103,7 +123,7 @@
                 Transformez un simple QR code imprimé en guide interactif 2D/3D. Sans GPS. Sans application. Depuis n'importe quel smartphone.
             </p>
             <div class="mt-10 flex flex-wrap gap-4">
-                <a href="#contact" class="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Voir la démo <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <a href="/demo" class="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
                 <a href="#produit" class="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-4 text-sm font-semibold text-white hover:bg-white/10 transition">En savoir plus</a>
             </div>
             <div class="mt-10 flex items-center gap-6 text-xs text-white/50">
@@ -371,6 +391,52 @@
             <a href="mailto:contact@qrmap.app" class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Planifier une démonstration gratuite <i data-lucide="arrow-right" class="w-5 h-5"></i></a>
             <a href="#" class="text-sm font-medium text-white/70 hover:text-primary underline underline-offset-4">Télécharger le dossier de présentation</a>
         </div>
+
+        <!-- Formulaire de capture de leads -->
+        <!-- TODO: brancher sur un backend/CRM plus tard -->
+        <div class="mt-14 max-w-2xl mx-auto text-left rounded-2xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur">
+            <p class="font-display text-xl font-bold text-white">Parlez-nous de votre bâtiment</p>
+            <p class="mt-2 text-sm text-white/60">Remplissez ce formulaire, nous vous recontactons rapidement.</p>
+            <form id="leadForm" class="mt-6 grid sm:grid-cols-2 gap-4" onsubmit="return sendLead(event)">
+                <div class="sm:col-span-1">
+                    <label class="block text-xs text-white/50 mb-1.5">Nom complet *</label>
+                    <input name="nom" type="text" required class="w-full rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3 text-sm text-white placeholder-white/30 focus:border-primary focus:outline-none transition" placeholder="Votre nom">
+                </div>
+                <div class="sm:col-span-1">
+                    <label class="block text-xs text-white/50 mb-1.5">Organisation *</label>
+                    <input name="org" type="text" required class="w-full rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3 text-sm text-white placeholder-white/30 focus:border-primary focus:outline-none transition" placeholder="Votre structure">
+                </div>
+                <div class="sm:col-span-1">
+                    <label class="block text-xs text-white/50 mb-1.5">Téléphone / WhatsApp *</label>
+                    <input name="tel" type="tel" required class="w-full rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3 text-sm text-white placeholder-white/30 focus:border-primary focus:outline-none transition" placeholder="+237 6XX XXX XXX">
+                </div>
+                <div class="sm:col-span-1">
+                    <label class="block text-xs text-white/50 mb-1.5">Email</label>
+                    <input name="email" type="email" class="w-full rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3 text-sm text-white placeholder-white/30 focus:border-primary focus:outline-none transition" placeholder="vous@exemple.com">
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-xs text-white/50 mb-1.5">Type de bâtiment</label>
+                    <select name="type" class="w-full rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3 text-sm text-white focus:border-primary focus:outline-none transition">
+                        <option class="bg-ink" value="Hôpital / Clinique">Hôpital / Clinique</option>
+                        <option class="bg-ink" value="Banque">Banque</option>
+                        <option class="bg-ink" value="Administration">Administration</option>
+                        <option class="bg-ink" value="Université / École">Université / École</option>
+                        <option class="bg-ink" value="Centre commercial">Centre commercial</option>
+                        <option class="bg-ink" value="Événement (foire, salon, concert)">Événement (foire, salon, concert)</option>
+                        <option class="bg-ink" value="Autre">Autre</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-xs text-white/50 mb-1.5">Message</label>
+                    <textarea name="message" rows="3" class="w-full rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3 text-sm text-white placeholder-white/30 focus:border-primary focus:outline-none transition resize-none" placeholder="Décrivez votre besoin..."></textarea>
+                </div>
+                <div class="sm:col-span-2">
+                    <button type="submit" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
+                        Être recontacté <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </section>
 
@@ -424,6 +490,29 @@
 <script>
     // Icônes Lucide
     lucide.createIcons();
+
+    // Formulaire de leads -> WhatsApp pré-rempli (sans backend)
+    // TODO: brancher sur un backend/CRM plus tard
+    function sendLead(e){
+        e.preventDefault();
+        const f = e.target;
+        const nom = f.nom.value.trim();
+        const org = f.org.value.trim();
+        const tel = f.tel.value.trim();
+        const email = f.email.value.trim();
+        const type = f.type.value;
+        const message = f.message.value.trim();
+
+        let txt = `Bonjour QRMap, je suis ${nom} de ${org}. `;
+        txt += `Type de bâtiment : ${type}. `;
+        if (message) txt += `${message}. `;
+        txt += `Me recontacter au ${tel}.`;
+        if (email) txt += ` Email : ${email}.`;
+
+        const url = 'https://wa.me/237695249549?text=' + encodeURIComponent(txt);
+        window.open(url, '_blank');
+        return false;
+    }
 
     // Reveal on scroll
     const io = new IntersectionObserver((entries) => {
