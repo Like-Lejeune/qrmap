@@ -94,10 +94,10 @@
     <div class="relative mx-auto max-w-7xl px-5 sm:px-8 grid lg:grid-cols-2 gap-16 items-center">
         <div>
             <div class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-6">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Africa-first · Safe buildings
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Navigation intérieure · Safe buildings
             </div>
             <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
-                La navigation intérieure conçue pour <span class="text-primary"> pour vous.</span>
+                Le GPS s'arrête à l'entrée. <span class="text-primary">QRMap commence là.</span>
             </h1>
             <p class="mt-6 text-lg sm:text-xl text-white/70 max-w-xl leading-relaxed">
                 Transformez un simple QR code imprimé en guide interactif 2D/3D. Sans GPS. Sans application. Depuis n'importe quel smartphone.
@@ -168,18 +168,18 @@
         <div class="mt-16 grid md:grid-cols-3 gap-6">
             <div data-reveal class="rounded-2xl border border-white/10 bg-white/[0.03] p-8 hover:border-primary/40 transition">
                 <p class="font-display text-5xl font-bold text-primary leading-none">10 à 25 min</p>
-                <p class="mt-3 text-white font-semibold">perdues par patient</p>
-                <p class="mt-3 text-white/60 text-sm leading-relaxed">à cause d'une signalétique défaillante dans les hôpitaux.</p>
+                <p class="mt-3 text-white font-semibold">perdues par visiteur</p>
+                <p class="mt-3 text-white/60 text-sm leading-relaxed">dans les grands bâtiments à cause d'une signalétique insuffisante : hôpitaux, administrations, campus, centres commerciaux.</p>
             </div>
             <div data-reveal style="animation-delay:120ms" class="rounded-2xl border border-white/10 bg-white/[0.03] p-8 hover:border-primary/40 transition">
                 <p class="font-display text-5xl font-bold text-primary leading-none">0 solution</p>
                 <p class="mt-3 text-white font-semibold">locale déployée</p>
-                <p class="mt-3 text-white/60 text-sm leading-relaxed">aucune navigation intérieure commerciale au Cameroun aujourd'hui.</p>
+                <p class="mt-3 text-white/60 text-sm leading-relaxed">aucune navigation intérieure commerciale n'est déployée au Cameroun aujourd'hui, quel que soit le type de bâtiment.</p>
             </div>
             <div data-reveal style="animation-delay:240ms" class="rounded-2xl border border-white/10 bg-white/[0.03] p-8 hover:border-primary/40 transition">
-                <p class="font-display text-5xl font-bold text-primary leading-none">800 à 2 000</p>
-                <p class="mt-3 text-white font-semibold">patients par jour</p>
-                <p class="mt-3 text-white/60 text-sm leading-relaxed">dans les hôpitaux de référence, sans système directionnel dynamique.</p>
+                <p class="font-display text-5xl font-bold text-primary leading-none">Des milliers</p>
+                <p class="mt-3 text-white font-semibold">de visiteurs par jour</p>
+                <p class="mt-3 text-white/60 text-sm leading-relaxed">dans les hôpitaux, banques, administrations et grands événements — sans aucun système d'orientation dynamique.</p>
             </div>
         </div>
     </div>
@@ -275,7 +275,7 @@
             <p class="text-primary font-semibold text-sm uppercase tracking-wider mb-4">Marchés</p>
             <h2 class="font-display text-4xl sm:text-5xl font-bold text-ink leading-tight">Conçu pour les infrastructures qui comptent.</h2>
         </div>
-        <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+        <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <div data-reveal class="group rounded-2xl bg-white border border-border p-7 hover:border-primary hover:-translate-y-1 transition-all duration-300">
                 <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5"><i data-lucide="heart-pulse" class="w-7 h-7 text-primary"></i></div>
                 <h3 class="font-display text-xl font-bold text-ink">Santé</h3>
@@ -301,6 +301,11 @@
                 <h3 class="font-display text-xl font-bold text-ink">Entreprises</h3>
                 <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Bâtiments privés à multiniveaux.</p>
             </div>
+            <div data-reveal style="animation-delay:500ms" class="group rounded-2xl bg-white border border-border p-7 hover:border-primary hover:-translate-y-1 transition-all duration-300">
+                <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5"><i data-lucide="tent" class="w-7 h-7 text-primary"></i></div>
+                <h3 class="font-display text-xl font-bold text-ink">Événements</h3>
+                <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Foires, salons, conférences, concerts : un plan temporaire déployé en quelques jours.</p>
+            </div>
         </div>
     </div>
 </section>
@@ -321,14 +326,14 @@
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
         <div class="text-center max-w-2xl mx-auto" data-reveal>
             <p class="text-primary font-semibold text-sm uppercase tracking-wider mb-4">Tarifs</p>
-            <h2 class="font-display text-4xl sm:text-5xl font-bold text-ink leading-tight">Choississez votre plan.</h2>
+            <h2 class="font-display text-4xl sm:text-5xl font-bold text-ink leading-tight">Choisissez votre plan.</h2>
         </div>
         <div class="mt-16 grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             <div data-reveal class="rounded-3xl bg-white border border-border p-10">
                 <p class="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Installation</p>
                 <h3 class="mt-3 font-display text-2xl font-bold text-ink">Mise en service</h3>
-                <p class="mt-6 font-display text-4xl font-bold text-ink">à partir de 500 000<span class="text-lg font-semibold text-muted-foreground">FCFA</span></p>
-                <p class="text-sm text-muted-foreground">Paiement unique</p>
+                <p class="mt-6 font-display text-4xl font-bold text-ink">Sur devis</p>
+                <p class="text-sm text-muted-foreground">Selon la taille et la complexité du bâtiment</p>
                 <ul class="mt-8 space-y-3 text-sm text-ink-2">
                     <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Modélisation 3D du bâtiment</li>
                     <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Configuration sur mesure</li>
@@ -341,8 +346,8 @@
                 <span class="absolute -top-3 left-10 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">Récurrent</span>
                 <p class="text-sm font-semibold text-primary uppercase tracking-wider">Abonnement SaaS</p>
                 <h3 class="mt-3 font-display text-2xl font-bold">Plateforme annuelle</h3>
-                <p class="mt-6 font-display text-4xl font-bold">300 000 – 800 000 <span class="text-lg font-semibold text-white/60">FCFA / an</span></p>
-                <p class="text-sm text-white/60">Renouvelable</p>
+                <p class="mt-6 font-display text-4xl font-bold">Sur devis</p>
+                <p class="text-sm text-white/60">Abonnement annuel, selon le nombre d'étages, de destinations et de QR codes</p>
                 <ul class="mt-8 space-y-3 text-sm text-white/80">
                     <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Hébergement sécurisé</li>
                     <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Mises à jour continues</li>
@@ -361,9 +366,9 @@
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-primary/20 blur-[160px]"></div>
     <div class="relative mx-auto max-w-4xl px-5 sm:px-8 text-center" data-reveal>
         <h2 class="font-display text-4xl sm:text-6xl font-bold leading-tight">Prêt à cartographier <span class="text-primary">votre bâtiment</span> ?</h2>
-        <p class="mt-6 text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">Les 2 premiers sites pilotes sont en cours de déploiement. Rejoignez les organisations qui transforment l'expérience de leurs visiteurs.</p>
+        <p class="mt-6 text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">Les premiers déploiements pilotes sont en préparation. Rejoignez les organisations qui transforment l'expérience de leurs visiteurs.</p>
         <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
-            <a href="mailto:contact@qrmap.cm" class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Planifier une démonstration gratuite <i data-lucide="arrow-right" class="w-5 h-5"></i></a>
+            <a href="mailto:contact@qrmap.app" class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Planifier une démonstration gratuite <i data-lucide="arrow-right" class="w-5 h-5"></i></a>
             <a href="#" class="text-sm font-medium text-white/70 hover:text-primary underline underline-offset-4">Télécharger le dossier de présentation</a>
         </div>
     </div>
@@ -374,8 +379,14 @@
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-16 grid md:grid-cols-4 gap-10">
         <div class="md:col-span-2">
             <div class="flex items-center gap-2 font-display font-bold text-xl text-white"><span class="text-primary text-2xl">◆</span> QRMap</div>
-            <p class="mt-4 text-sm max-w-sm leading-relaxed">Le GPS s'arrête à l'entrée. QRMap commence là où les autres s'arrêtent.</p>
+            <p class="mt-4 text-sm max-w-sm leading-relaxed">Le GPS s'arrête à l'entrée. QRMap commence là.</p>
             <p class="mt-6 text-xs text-white/40">Navigation intérieure 2D/3D · Sans GPS · Sans installation · Activé par un scan QR</p>
+            <!-- Réseaux sociaux -->
+            <!-- TODO: remplacer par les URLs des pages LinkedIn et Facebook une fois créées -->
+            <div class="mt-6 flex items-center gap-3">
+                <a href="#" aria-label="LinkedIn" class="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/70 hover:text-primary hover:border-primary transition"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/70 hover:text-primary hover:border-primary transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+            </div>
         </div>
         <div>
             <p class="font-display font-bold text-white mb-4">Navigation</p>
@@ -391,17 +402,24 @@
             <p class="font-display font-bold text-white mb-4">Contact</p>
             <ul class="space-y-2 text-sm">
                 <li>Yaoundé, Cameroun</li>
-                <li><a class="hover:text-primary" href="mailto:contact@qrmap.cm">contact@qrmap.cm</a></li>
+                <li><a class="hover:text-primary" href="mailto:contact@qrmap.app">contact@qrmap.app</a></li>
+                <li><a class="hover:text-primary" href="https://wa.me/237695249549">WhatsApp : +237 695 249 549</a></li>
             </ul>
         </div>
     </div>
     <div class="border-t border-white/10">
         <div class="mx-auto max-w-7xl px-5 sm:px-8 py-6 text-xs text-white/40 flex flex-wrap items-center justify-between gap-3">
-            <p>© 2025 QRMap · Yaoundé, Cameroun · contact@qrmap.cm</p>
+            <p>© 2026 QRMap · Yaoundé, Cameroun · contact@qrmap.app</p>
             <p>Made with ◆ in Africa</p>
         </div>
     </div>
 </footer>
+
+<!-- Bouton flottant WhatsApp -->
+<a href="https://wa.me/237695249549" target="_blank" rel="noopener" aria-label="Contacter sur WhatsApp"
+   class="fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
+    <i data-lucide="message-circle" class="w-7 h-7"></i>
+</a>
 
 <script>
     // Icônes Lucide
