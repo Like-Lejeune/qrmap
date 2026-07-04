@@ -428,8 +428,8 @@
     <div class="absolute inset-0 grid-bg opacity-30"></div>
     <div class="relative mx-auto max-w-3xl px-5 sm:px-8 text-center" data-reveal>
         <p class="text-primary font-semibold text-sm uppercase tracking-wider mb-4">À propos</p>
-        <h2 class="font-display text-4xl sm:text-5xl font-bold leading-tight">Conçu au Cameroun, pensé pour l'Afrique.</h2>
-        <p class="mt-8 text-lg text-white/70 leading-relaxed">QRMap est né d'un constat simple : chaque jour, des milliers de visiteurs se perdent dans nos hôpitaux, banques, universités et administrations, faute de repères. Nous avons créé la première solution de navigation intérieure conçue pour nos réalités : mobile-first, légère, sans application à installer et sans infrastructure coûteuse. Notre ambition : qu'on ne se perde plus jamais dans un bâtiment, à Yaoundé comme partout en Afrique.</p>
+        <h2 class="font-display text-4xl sm:text-5xl font-bold leading-tight">Conçu au Cameroun, pensé pour tous.</h2>
+        <p class="mt-8 text-lg text-white/70 leading-relaxed">QRMap est né d'un constat simple : chaque jour, des milliers de visiteurs se perdent dans nos hôpitaux, banques, universités et administrations, faute de repères. Nous avons créé la première solution de navigation intérieure conçue pour nos réalités : mobile-first, légère, sans application à installer et sans infrastructure coûteuse. Notre ambition : qu'on ne se perde plus jamais dans un bâtiment, à Yaoundé comme partout ailleurs.</p>
         <!-- TODO: ajouter photo/équipe quand disponible -->
     </div>
 </section>
