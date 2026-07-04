@@ -54,6 +54,17 @@
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Google Analytics 4 -->
+    <!-- TODO: demander l'ID de mesure au propriétaire, puis remplacer G-XXXXXXXXXX -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+        function trackEvent(name, params){ try { gtag('event', name, params || {}); } catch(e){} }
+    </script>
+
     <style>
         body { font-family: 'DM Sans', sans-serif; }
         .font-display { font-family: 'Syne', sans-serif; }
@@ -93,10 +104,15 @@
             <a href="#produit" class="hover:text-primary transition">Produit</a>
             <a href="#marches" class="hover:text-primary transition">Marchés</a>
             <a href="/demo" class="hover:text-primary transition inline-flex items-center gap-1"><i data-lucide="play" class="w-3.5 h-3.5"></i> Démo</a>
+            <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'navbar'})" class="hover:text-primary transition">Présentation</a>
             <a href="#tarifs" class="hover:text-primary transition">Tarifs</a>
+            <a href="#faq" class="hover:text-primary transition">FAQ</a>
             <a href="#contact" class="hover:text-primary transition">Contact</a>
+            <!-- TODO: version EN à planifier après le lancement — sélecteur FR/EN
+            <span class="flex items-center gap-1 text-xs"><a href="/" class="text-primary font-semibold">FR</a><span class="text-white/20">/</span><a href="/en" class="hover:text-primary">EN</a></span>
+            -->
         </nav>
-        <a href="/demo" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
+        <a href="/demo" onclick="trackEvent('click_demo',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
             Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </a>
     </div>
@@ -123,7 +139,8 @@
                 Transformez un simple QR code imprimé en guide interactif 2D/3D. Sans GPS. Sans application. Depuis n'importe quel smartphone.
             </p>
             <div class="mt-10 flex flex-wrap gap-4">
-                <a href="/demo" class="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <a href="/demo" onclick="trackEvent('click_demo',{source:'hero'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'hero'})" class="inline-flex items-center gap-2 rounded-full border border-primary/40 px-7 py-4 text-sm font-semibold text-white hover:bg-primary/10 transition"><i data-lucide="play" class="w-4 h-4 text-primary"></i> Voir la présentation</a>
                 <a href="#produit" class="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-4 text-sm font-semibold text-white hover:bg-white/10 transition">En savoir plus</a>
             </div>
             <div class="mt-10 flex items-center gap-6 text-xs text-white/50">
@@ -239,6 +256,14 @@
                     <h3 class="mt-6 text-xl font-bold text-ink">Vos visiteurs scannent</h3>
                     <p class="mt-3 text-muted-foreground leading-relaxed max-w-xs mx-auto">Un scan suffit pour ouvrir le plan interactif. Aucune installation requise.</p>
                 </div>
+            </div>
+        </div>
+        <div class="mt-16 flex justify-center" data-reveal>
+            <div class="rounded-3xl bg-white border border-border p-8 flex flex-col items-center text-center shadow-sm max-w-xs">
+                <div class="hidden md:block w-[160px] h-[160px]"><svg viewBox="0 0 29 29" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" width="100%" height="100%" fill="#0d0f14"><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="10" y="2" width="1" height="1"/><rect x="11" y="2" width="1" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="14" y="2" width="1" height="1"/><rect x="16" y="2" width="1" height="1"/><rect x="17" y="2" width="1" height="1"/><rect x="20" y="2" width="1" height="1"/><rect x="21" y="2" width="1" height="1"/><rect x="22" y="2" width="1" height="1"/><rect x="23" y="2" width="1" height="1"/><rect x="24" y="2" width="1" height="1"/><rect x="25" y="2" width="1" height="1"/><rect x="26" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="12" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="20" y="3" width="1" height="1"/><rect x="26" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="11" y="4" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="16" y="4" width="1" height="1"/><rect x="17" y="4" width="1" height="1"/><rect x="18" y="4" width="1" height="1"/><rect x="20" y="4" width="1" height="1"/><rect x="22" y="4" width="1" height="1"/><rect x="23" y="4" width="1" height="1"/><rect x="24" y="4" width="1" height="1"/><rect x="26" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="12" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="15" y="5" width="1" height="1"/><rect x="16" y="5" width="1" height="1"/><rect x="17" y="5" width="1" height="1"/><rect x="20" y="5" width="1" height="1"/><rect x="22" y="5" width="1" height="1"/><rect x="23" y="5" width="1" height="1"/><rect x="24" y="5" width="1" height="1"/><rect x="26" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="12" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="16" y="6" width="1" height="1"/><rect x="17" y="6" width="1" height="1"/><rect x="18" y="6" width="1" height="1"/><rect x="20" y="6" width="1" height="1"/><rect x="22" y="6" width="1" height="1"/><rect x="23" y="6" width="1" height="1"/><rect x="24" y="6" width="1" height="1"/><rect x="26" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="8" y="7" width="1" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="20" y="7" width="1" height="1"/><rect x="26" y="7" width="1" height="1"/><rect x="2" y="8" width="1" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="5" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="7" y="8" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="16" y="8" width="1" height="1"/><rect x="18" y="8" width="1" height="1"/><rect x="20" y="8" width="1" height="1"/><rect x="21" y="8" width="1" height="1"/><rect x="22" y="8" width="1" height="1"/><rect x="23" y="8" width="1" height="1"/><rect x="24" y="8" width="1" height="1"/><rect x="25" y="8" width="1" height="1"/><rect x="26" y="8" width="1" height="1"/><rect x="10" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="12" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="17" y="9" width="1" height="1"/><rect x="18" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="6" y="10" width="1" height="1"/><rect x="8" y="10" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/><rect x="12" y="10" width="1" height="1"/><rect x="18" y="10" width="1" height="1"/><rect x="19" y="10" width="1" height="1"/><rect x="20" y="10" width="1" height="1"/><rect x="21" y="10" width="1" height="1"/><rect x="22" y="10" width="1" height="1"/><rect x="23" y="10" width="1" height="1"/><rect x="26" y="10" width="1" height="1"/><rect x="2" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="4" y="11" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="6" y="11" width="1" height="1"/><rect x="7" y="11" width="1" height="1"/><rect x="11" y="11" width="1" height="1"/><rect x="12" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="16" y="11" width="1" height="1"/><rect x="17" y="11" width="1" height="1"/><rect x="18" y="11" width="1" height="1"/><rect x="19" y="11" width="1" height="1"/><rect x="22" y="11" width="1" height="1"/><rect x="23" y="11" width="1" height="1"/><rect x="25" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/><rect x="8" y="12" width="1" height="1"/><rect x="10" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="16" y="12" width="1" height="1"/><rect x="17" y="12" width="1" height="1"/><rect x="19" y="12" width="1" height="1"/><rect x="21" y="12" width="1" height="1"/><rect x="23" y="12" width="1" height="1"/><rect x="24" y="12" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="4" y="13" width="1" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="6" y="13" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="9" y="13" width="1" height="1"/><rect x="11" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="16" y="13" width="1" height="1"/><rect x="17" y="13" width="1" height="1"/><rect x="18" y="13" width="1" height="1"/><rect x="19" y="13" width="1" height="1"/><rect x="20" y="13" width="1" height="1"/><rect x="24" y="13" width="1" height="1"/><rect x="25" y="13" width="1" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="3" y="14" width="1" height="1"/><rect x="4" y="14" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/><rect x="7" y="14" width="1" height="1"/><rect x="8" y="14" width="1" height="1"/><rect x="10" y="14" width="1" height="1"/><rect x="11" y="14" width="1" height="1"/><rect x="12" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/><rect x="19" y="14" width="1" height="1"/><rect x="20" y="14" width="1" height="1"/><rect x="23" y="14" width="1" height="1"/><rect x="24" y="14" width="1" height="1"/><rect x="25" y="14" width="1" height="1"/><rect x="26" y="14" width="1" height="1"/><rect x="2" y="15" width="1" height="1"/><rect x="4" y="15" width="1" height="1"/><rect x="6" y="15" width="1" height="1"/><rect x="9" y="15" width="1" height="1"/><rect x="10" y="15" width="1" height="1"/><rect x="14" y="15" width="1" height="1"/><rect x="16" y="15" width="1" height="1"/><rect x="17" y="15" width="1" height="1"/><rect x="18" y="15" width="1" height="1"/><rect x="22" y="15" width="1" height="1"/><rect x="25" y="15" width="1" height="1"/><rect x="8" y="16" width="1" height="1"/><rect x="10" y="16" width="1" height="1"/><rect x="12" y="16" width="1" height="1"/><rect x="13" y="16" width="1" height="1"/><rect x="14" y="16" width="1" height="1"/><rect x="16" y="16" width="1" height="1"/><rect x="17" y="16" width="1" height="1"/><rect x="18" y="16" width="1" height="1"/><rect x="20" y="16" width="1" height="1"/><rect x="21" y="16" width="1" height="1"/><rect x="22" y="16" width="1" height="1"/><rect x="23" y="16" width="1" height="1"/><rect x="24" y="16" width="1" height="1"/><rect x="4" y="17" width="1" height="1"/><rect x="6" y="17" width="1" height="1"/><rect x="11" y="17" width="1" height="1"/><rect x="12" y="17" width="1" height="1"/><rect x="13" y="17" width="1" height="1"/><rect x="16" y="17" width="1" height="1"/><rect x="21" y="17" width="1" height="1"/><rect x="22" y="17" width="1" height="1"/><rect x="24" y="17" width="1" height="1"/><rect x="25" y="17" width="1" height="1"/><rect x="2" y="18" width="1" height="1"/><rect x="3" y="18" width="1" height="1"/><rect x="4" y="18" width="1" height="1"/><rect x="5" y="18" width="1" height="1"/><rect x="6" y="18" width="1" height="1"/><rect x="8" y="18" width="1" height="1"/><rect x="10" y="18" width="1" height="1"/><rect x="14" y="18" width="1" height="1"/><rect x="17" y="18" width="1" height="1"/><rect x="18" y="18" width="1" height="1"/><rect x="19" y="18" width="1" height="1"/><rect x="20" y="18" width="1" height="1"/><rect x="21" y="18" width="1" height="1"/><rect x="22" y="18" width="1" height="1"/><rect x="23" y="18" width="1" height="1"/><rect x="24" y="18" width="1" height="1"/><rect x="10" y="19" width="1" height="1"/><rect x="16" y="19" width="1" height="1"/><rect x="18" y="19" width="1" height="1"/><rect x="22" y="19" width="1" height="1"/><rect x="2" y="20" width="1" height="1"/><rect x="3" y="20" width="1" height="1"/><rect x="4" y="20" width="1" height="1"/><rect x="5" y="20" width="1" height="1"/><rect x="6" y="20" width="1" height="1"/><rect x="7" y="20" width="1" height="1"/><rect x="8" y="20" width="1" height="1"/><rect x="10" y="20" width="1" height="1"/><rect x="12" y="20" width="1" height="1"/><rect x="15" y="20" width="1" height="1"/><rect x="16" y="20" width="1" height="1"/><rect x="18" y="20" width="1" height="1"/><rect x="20" y="20" width="1" height="1"/><rect x="22" y="20" width="1" height="1"/><rect x="2" y="21" width="1" height="1"/><rect x="8" y="21" width="1" height="1"/><rect x="14" y="21" width="1" height="1"/><rect x="16" y="21" width="1" height="1"/><rect x="17" y="21" width="1" height="1"/><rect x="18" y="21" width="1" height="1"/><rect x="22" y="21" width="1" height="1"/><rect x="23" y="21" width="1" height="1"/><rect x="24" y="21" width="1" height="1"/><rect x="25" y="21" width="1" height="1"/><rect x="26" y="21" width="1" height="1"/><rect x="2" y="22" width="1" height="1"/><rect x="4" y="22" width="1" height="1"/><rect x="5" y="22" width="1" height="1"/><rect x="6" y="22" width="1" height="1"/><rect x="8" y="22" width="1" height="1"/><rect x="10" y="22" width="1" height="1"/><rect x="11" y="22" width="1" height="1"/><rect x="12" y="22" width="1" height="1"/><rect x="13" y="22" width="1" height="1"/><rect x="15" y="22" width="1" height="1"/><rect x="16" y="22" width="1" height="1"/><rect x="18" y="22" width="1" height="1"/><rect x="19" y="22" width="1" height="1"/><rect x="20" y="22" width="1" height="1"/><rect x="21" y="22" width="1" height="1"/><rect x="22" y="22" width="1" height="1"/><rect x="23" y="22" width="1" height="1"/><rect x="24" y="22" width="1" height="1"/><rect x="25" y="22" width="1" height="1"/><rect x="26" y="22" width="1" height="1"/><rect x="2" y="23" width="1" height="1"/><rect x="4" y="23" width="1" height="1"/><rect x="5" y="23" width="1" height="1"/><rect x="6" y="23" width="1" height="1"/><rect x="8" y="23" width="1" height="1"/><rect x="12" y="23" width="1" height="1"/><rect x="14" y="23" width="1" height="1"/><rect x="16" y="23" width="1" height="1"/><rect x="19" y="23" width="1" height="1"/><rect x="20" y="23" width="1" height="1"/><rect x="21" y="23" width="1" height="1"/><rect x="24" y="23" width="1" height="1"/><rect x="25" y="23" width="1" height="1"/><rect x="26" y="23" width="1" height="1"/><rect x="2" y="24" width="1" height="1"/><rect x="4" y="24" width="1" height="1"/><rect x="5" y="24" width="1" height="1"/><rect x="6" y="24" width="1" height="1"/><rect x="8" y="24" width="1" height="1"/><rect x="12" y="24" width="1" height="1"/><rect x="13" y="24" width="1" height="1"/><rect x="14" y="24" width="1" height="1"/><rect x="15" y="24" width="1" height="1"/><rect x="16" y="24" width="1" height="1"/><rect x="17" y="24" width="1" height="1"/><rect x="18" y="24" width="1" height="1"/><rect x="19" y="24" width="1" height="1"/><rect x="20" y="24" width="1" height="1"/><rect x="23" y="24" width="1" height="1"/><rect x="25" y="24" width="1" height="1"/><rect x="2" y="25" width="1" height="1"/><rect x="8" y="25" width="1" height="1"/><rect x="13" y="25" width="1" height="1"/><rect x="15" y="25" width="1" height="1"/><rect x="19" y="25" width="1" height="1"/><rect x="21" y="25" width="1" height="1"/><rect x="22" y="25" width="1" height="1"/><rect x="23" y="25" width="1" height="1"/><rect x="24" y="25" width="1" height="1"/><rect x="25" y="25" width="1" height="1"/><rect x="2" y="26" width="1" height="1"/><rect x="3" y="26" width="1" height="1"/><rect x="4" y="26" width="1" height="1"/><rect x="5" y="26" width="1" height="1"/><rect x="6" y="26" width="1" height="1"/><rect x="7" y="26" width="1" height="1"/><rect x="8" y="26" width="1" height="1"/><rect x="10" y="26" width="1" height="1"/><rect x="11" y="26" width="1" height="1"/><rect x="12" y="26" width="1" height="1"/><rect x="14" y="26" width="1" height="1"/><rect x="15" y="26" width="1" height="1"/><rect x="17" y="26" width="1" height="1"/><rect x="19" y="26" width="1" height="1"/><rect x="20" y="26" width="1" height="1"/><rect x="24" y="26" width="1" height="1"/><rect x="25" y="26" width="1" height="1"/><rect x="26" y="26" width="1" height="1"/></svg></div>
+                <a href="/demo" onclick="trackEvent('click_demo',{source:'qr_card_mobile'})" class="md:hidden inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Ouvrir la démo <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <p class="mt-5 text-sm font-semibold text-ink">Scannez, comme vos visiteurs le feront.</p>
+                <p class="mt-1 text-xs text-muted-foreground">Ce QR ouvre la démo QRMap.</p>
             </div>
         </div>
     </div>
@@ -380,6 +405,53 @@
     </div>
 </section>
 
+<!-- À PROPOS -->
+<section id="apropos" class="relative bg-ink text-white py-28 overflow-hidden">
+    <div class="absolute inset-0 grid-bg opacity-30"></div>
+    <div class="relative mx-auto max-w-3xl px-5 sm:px-8 text-center" data-reveal>
+        <p class="text-primary font-semibold text-sm uppercase tracking-wider mb-4">À propos</p>
+        <h2 class="font-display text-4xl sm:text-5xl font-bold leading-tight">Conçu au Cameroun, pensé pour l'Afrique.</h2>
+        <p class="mt-8 text-lg text-white/70 leading-relaxed">QRMap est né d'un constat simple : chaque jour, des milliers de visiteurs se perdent dans nos hôpitaux, banques, universités et administrations, faute de repères. Nous avons créé la première solution de navigation intérieure conçue pour nos réalités : mobile-first, légère, sans application à installer et sans infrastructure coûteuse. Notre ambition : qu'on ne se perde plus jamais dans un bâtiment, à Yaoundé comme partout en Afrique.</p>
+        <!-- TODO: ajouter photo/équipe quand disponible -->
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="bg-mist py-28">
+    <div class="mx-auto max-w-3xl px-5 sm:px-8">
+        <div class="text-center max-w-2xl mx-auto" data-reveal>
+            <p class="text-primary font-semibold text-sm uppercase tracking-wider mb-4">FAQ</p>
+            <h2 class="font-display text-4xl sm:text-5xl font-bold text-ink leading-tight">Questions fréquentes.</h2>
+        </div>
+        <div class="mt-14 space-y-4">
+            <details class="group rounded-2xl bg-white border border-border px-6 py-5 transition hover:border-primary/40" data-reveal>
+                <summary class="flex items-center justify-between cursor-pointer list-none font-display font-bold text-ink text-lg"><span>Faut-il installer une application ?</span><i data-lucide="plus" class="w-5 h-5 text-primary shrink-0 transition-transform group-open:rotate-45"></i></summary>
+                <p class="mt-4 text-muted-foreground leading-relaxed">Non. QRMap fonctionne directement dans le navigateur de votre téléphone. Scannez le QR code, le plan s'ouvre immédiatement.</p>
+            </details>
+            <details class="group rounded-2xl bg-white border border-border px-6 py-5 transition hover:border-primary/40" data-reveal>
+                <summary class="flex items-center justify-between cursor-pointer list-none font-display font-bold text-ink text-lg"><span>Faut-il une connexion internet ?</span><i data-lucide="plus" class="w-5 h-5 text-primary shrink-0 transition-transform group-open:rotate-45"></i></summary>
+                <p class="mt-4 text-muted-foreground leading-relaxed">Une connexion suffit au premier chargement. QRMap est conçu pour les connexions lentes (2G/3G) et reste utilisable ensuite même si le réseau est instable à l'intérieur du bâtiment.</p>
+            </details>
+            <details class="group rounded-2xl bg-white border border-border px-6 py-5 transition hover:border-primary/40" data-reveal>
+                <summary class="flex items-center justify-between cursor-pointer list-none font-display font-bold text-ink text-lg"><span>Ça marche sur tous les téléphones ?</span><i data-lucide="plus" class="w-5 h-5 text-primary shrink-0 transition-transform group-open:rotate-45"></i></summary>
+                <p class="mt-4 text-muted-foreground leading-relaxed">Oui, sur tout smartphone capable de scanner un QR code — soit via l'appareil photo, soit via une application de scan. Aucun téléphone récent ou haut de gamme n'est nécessaire.</p>
+            </details>
+            <details class="group rounded-2xl bg-white border border-border px-6 py-5 transition hover:border-primary/40" data-reveal>
+                <summary class="flex items-center justify-between cursor-pointer list-none font-display font-bold text-ink text-lg"><span>Combien de temps prend le déploiement ?</span><i data-lucide="plus" class="w-5 h-5 text-primary shrink-0 transition-transform group-open:rotate-45"></i></summary>
+                <p class="mt-4 text-muted-foreground leading-relaxed">Selon la taille du bâtiment, de quelques jours à quelques semaines : cartographie, génération des QR codes, impression et pose. Aucun capteur, aucune balise, aucun câblage.</p>
+            </details>
+            <details class="group rounded-2xl bg-white border border-border px-6 py-5 transition hover:border-primary/40" data-reveal>
+                <summary class="flex items-center justify-between cursor-pointer list-none font-display font-bold text-ink text-lg"><span>Et si mon bâtiment change (travaux, nouveaux services) ?</span><i data-lucide="plus" class="w-5 h-5 text-primary shrink-0 transition-transform group-open:rotate-45"></i></summary>
+                <p class="mt-4 text-muted-foreground leading-relaxed">Le plan est mis à jour à distance depuis notre plateforme. Les QR codes déjà affichés restent valables : ils pointent toujours vers la version à jour.</p>
+            </details>
+            <details class="group rounded-2xl bg-white border border-border px-6 py-5 transition hover:border-primary/40" data-reveal>
+                <summary class="flex items-center justify-between cursor-pointer list-none font-display font-bold text-ink text-lg"><span>QRMap fonctionne-t-il pour un événement temporaire ?</span><i data-lucide="plus" class="w-5 h-5 text-primary shrink-0 transition-transform group-open:rotate-45"></i></summary>
+                <p class="mt-4 text-muted-foreground leading-relaxed">Oui. Foires, salons, conférences, concerts : nous déployons un plan temporaire en quelques jours, retiré à la fin de l'événement.</p>
+            </details>
+        </div>
+    </div>
+</section>
+
 <!-- CTA -->
 <section id="contact" class="relative bg-ink text-white py-32 overflow-hidden">
     <div class="absolute inset-0 grid-bg opacity-40"></div>
@@ -440,6 +512,23 @@
     </div>
 </section>
 
+<!-- MENTIONS LÉGALES + CONFIDENTIALITÉ -->
+<section id="legal" class="bg-mist border-t border-border py-20">
+    <div class="mx-auto max-w-4xl px-5 sm:px-8 grid md:grid-cols-2 gap-10 text-sm text-muted-foreground leading-relaxed">
+        <div id="mentions">
+            <p class="text-primary font-semibold text-xs uppercase tracking-wider mb-3">Mentions légales</p>
+            <p><strong class="text-ink">Éditeur :</strong> QRMap, Yaoundé, Cameroun.</p>
+            <p class="mt-2"><strong class="text-ink">Contact :</strong> <a class="text-primary hover:underline" href="mailto:contact@qrmap.app">contact@qrmap.app</a> · WhatsApp <a class="text-primary hover:underline" href="https://wa.me/237695249549">+237 695 249 549</a>.</p>
+            <p class="mt-2"><strong class="text-ink">Hébergeur :</strong> <!-- TODO: renseigner l'hébergeur retenu --> à renseigner.</p>
+        </div>
+        <div id="confidentialite">
+            <p class="text-primary font-semibold text-xs uppercase tracking-wider mb-3">Confidentialité</p>
+            <p>Les informations transmises via le formulaire (nom, organisation, téléphone, email, message) sont utilisées <strong class="text-ink">uniquement pour vous recontacter</strong>.</p>
+            <p class="mt-2">Elles ne sont ni revendues, ni cédées à des tiers. Vous pouvez demander leur suppression à tout moment via <a class="text-primary hover:underline" href="mailto:contact@qrmap.app">contact@qrmap.app</a>.</p>
+        </div>
+    </div>
+</section>
+
 <!-- FOOTER -->
 <footer class="bg-ink-2 text-white/70 border-t-2 border-primary">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 py-16 grid md:grid-cols-4 gap-10">
@@ -460,7 +549,7 @@
                 <li><a href="#produit" class="hover:text-primary">Produit</a></li>
                 <li><a href="#marches" class="hover:text-primary">Marchés</a></li>
                 <li><a href="#tarifs" class="hover:text-primary">Tarifs</a></li>
-                <li><a href="#" class="hover:text-primary">À propos</a></li>
+                <li><a href="#apropos" class="hover:text-primary">À propos</a></li>
                 <li><a href="#contact" class="hover:text-primary">Contact</a></li>
             </ul>
         </div>
@@ -476,13 +565,13 @@
     <div class="border-t border-white/10">
         <div class="mx-auto max-w-7xl px-5 sm:px-8 py-6 text-xs text-white/40 flex flex-wrap items-center justify-between gap-3">
             <p>© 2026 QRMap · Yaoundé, Cameroun · contact@qrmap.app</p>
-            <p>Made with ◆ in Africa</p>
+            <p class="flex items-center gap-3"><a href="#mentions" class="hover:text-primary">Mentions légales</a><span class="text-white/20">·</span><a href="#confidentialite" class="hover:text-primary">Confidentialité</a><span class="text-white/20">·</span><span>Made with ◆ in Africa</span></p>
         </div>
     </div>
 </footer>
 
 <!-- Bouton flottant WhatsApp -->
-<a href="https://wa.me/237695249549" target="_blank" rel="noopener" aria-label="Contacter sur WhatsApp"
+<a href="https://wa.me/237695249549" target="_blank" rel="noopener" aria-label="Contacter sur WhatsApp" onclick="trackEvent('click_whatsapp_float')"
    class="fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
     <i data-lucide="message-circle" class="w-7 h-7"></i>
 </a>
@@ -509,6 +598,7 @@
         txt += `Me recontacter au ${tel}.`;
         if (email) txt += ` Email : ${email}.`;
 
+        trackEvent('submit_lead_form',{type:type});
         const url = 'https://wa.me/237695249549?text=' + encodeURIComponent(txt);
         window.open(url, '_blank');
         return false;
