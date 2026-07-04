@@ -103,8 +103,8 @@
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-ink-2">
             <a href="#produit" class="hover:text-primary transition">Produit</a>
             <a href="#marches" class="hover:text-primary transition">Marchés</a>
-            <a href="/demo" class="hover:text-primary transition inline-flex items-center gap-1"><i data-lucide="play" class="w-3.5 h-3.5"></i> Démo</a>
-            <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'navbar'})" class="hover:text-primary transition">Présentation</a>
+            <a href="/demo" class="hover:text-primary transition inline-flex items-center gap-1">Démo</a>
+            <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'navbar'})" class="hover:text-primary transition"><i data-lucide="play" class="w-3.5 h-3.5"></i>Présentation</a>
             <a href="#tarifs" class="hover:text-primary transition">Tarifs</a>
             <a href="#faq" class="hover:text-primary transition">FAQ</a>
             <a href="#contact" class="hover:text-primary transition">Contact</a>
@@ -113,8 +113,8 @@
             -->
         </nav>
         <div class="flex items-center gap-3">
-            <a href="/demo" onclick="trackEvent('click_demo',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
-                Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
+                Voir la présentation<i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
             <!-- Bouton hamburger (mobile uniquement) -->
             <button id="menuBtn" onclick="toggleMenu()" aria-label="Ouvrir le menu" aria-expanded="false" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-border text-ink hover:border-primary transition">
@@ -159,7 +159,6 @@
             </p>
             <div class="mt-10 flex flex-wrap gap-4">
                 <a href="/demo" onclick="trackEvent('click_demo',{source:'hero'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-                <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'hero'})" class="inline-flex items-center gap-2 rounded-full border border-primary/40 px-7 py-4 text-sm font-semibold text-white hover:bg-primary/10 transition"><i data-lucide="play" class="w-4 h-4 text-primary"></i> Voir la présentation</a>
                 <a href="#produit" class="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-4 text-sm font-semibold text-white hover:bg-white/10 transition">En savoir plus</a>
             </div>
             <div class="mt-10 flex items-center gap-6 text-xs text-white/50">
