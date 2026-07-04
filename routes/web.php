@@ -23,8 +23,7 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/', fn() => view('vitrine'))->name('home');
 Route::get('/pitch', function () {
     return response()->file(public_path('pitch.html'));
-});
-Route::view('/', 'launch')->name('launch');
+})->name('pitch');
 Route::get('/', fn() => view('launch', ['demoUrl' => route('demo')]));
 Route::get('/demo', fn() => view('demo'))->name('demo');
 
