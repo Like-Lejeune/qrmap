@@ -112,9 +112,28 @@
             <span class="flex items-center gap-1 text-xs"><a href="/" class="text-primary font-semibold">FR</a><span class="text-white/20">/</span><a href="/en" class="hover:text-primary">EN</a></span>
             -->
         </nav>
-        <a href="/demo" onclick="trackEvent('click_demo',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
-            Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </a>
+        <div class="flex items-center gap-3">
+            <a href="/demo" onclick="trackEvent('click_demo',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
+                Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <!-- Bouton hamburger (mobile uniquement) -->
+            <button id="menuBtn" onclick="toggleMenu()" aria-label="Ouvrir le menu" aria-expanded="false" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-border text-ink hover:border-primary transition">
+                <i data-lucide="menu" id="menuIcon" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Menu mobile déroulant -->
+    <div id="mobileMenu" class="md:hidden hidden border-t border-border bg-white/95 backdrop-blur-md">
+        <nav class="mx-auto max-w-7xl px-5 sm:px-8 py-4 flex flex-col gap-1 text-sm font-medium text-ink-2">
+            <a href="#produit" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">Produit</a>
+            <a href="#marches" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">Marchés</a>
+            <a href="/demo" onclick="closeMenu();trackEvent('click_demo',{source:'mobile_menu'})" class="py-3 border-b border-border/60 hover:text-primary transition inline-flex items-center gap-1.5"><i data-lucide="play" class="w-3.5 h-3.5"></i> Démo</a>
+            <a href="/presentation/" onclick="closeMenu();trackEvent('click_presentation',{source:'mobile_menu'})" class="py-3 border-b border-border/60 hover:text-primary transition">Présentation</a>
+            <a href="#tarifs" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">Tarifs</a>
+            <a href="#faq" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">FAQ</a>
+            <a href="#contact" onclick="closeMenu()" class="py-3 hover:text-primary transition">Contact</a>
+        </nav>
     </div>
 </header>
 
@@ -577,6 +596,25 @@
 </a>
 
 <script>
+    // Menu mobile (hamburger)
+    function toggleMenu(){
+        const m = document.getElementById('mobileMenu');
+        const btn = document.getElementById('menuBtn');
+        const open = m.classList.toggle('hidden') === false;
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        document.getElementById('menuIcon').setAttribute('data-lucide', open ? 'x' : 'menu');
+        lucide.createIcons();
+    }
+    function closeMenu(){
+        const m = document.getElementById('mobileMenu');
+        if (!m.classList.contains('hidden')) {
+            m.classList.add('hidden');
+            document.getElementById('menuBtn').setAttribute('aria-expanded','false');
+            document.getElementById('menuIcon').setAttribute('data-lucide','menu');
+            lucide.createIcons();
+        }
+    }
+
     // Icônes Lucide
     lucide.createIcons();
 
