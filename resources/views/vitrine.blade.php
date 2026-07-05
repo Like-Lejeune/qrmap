@@ -108,9 +108,11 @@
             <a href="#tarifs" class="hover:text-primary transition">Tarifs</a>
             <a href="#faq" class="hover:text-primary transition">FAQ</a>
             <a href="#contact" class="hover:text-primary transition">Contact</a>
-            <!-- TODO: version EN à planifier après le lancement — sélecteur FR/EN
-            <span class="flex items-center gap-1 text-xs"><a href="/" class="text-primary font-semibold">FR</a><span class="text-white/20">/</span><a href="/en" class="hover:text-primary">EN</a></span>
-            -->
+            <span class="flex items-center gap-1 text-xs font-semibold">
+                <button type="button" onclick="setLang('fr')" data-lang-btn="fr" class="lang-btn text-primary">FR</button>
+                <span class="text-ink-2/30">/</span>
+                <button type="button" onclick="setLang('en')" data-lang-btn="en" class="lang-btn hover:text-primary">EN</button>
+            </span>
         </nav>
         <div class="flex items-center gap-3">
             <a href="/demo" onclick="trackEvent('click_demo',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
@@ -132,7 +134,13 @@
             <a href="/presentation/" onclick="closeMenu();trackEvent('click_presentation',{source:'mobile_menu'})" class="py-3 border-b border-border/60 hover:text-primary transition">Présentation</a>
             <a href="#tarifs" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">Tarifs</a>
             <a href="#faq" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">FAQ</a>
-            <a href="#contact" onclick="closeMenu()" class="py-3 hover:text-primary transition">Contact</a>
+            <a href="#contact" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">Contact</a>
+            <div class="py-3 flex items-center gap-2 text-sm font-semibold">
+                <span class="text-muted-foreground">Langue :</span>
+                <button type="button" onclick="setLang('fr');closeMenu()" data-lang-btn="fr" class="lang-btn text-primary">FR</button>
+                <span class="text-ink-2/30">/</span>
+                <button type="button" onclick="setLang('en');closeMenu()" data-lang-btn="en" class="lang-btn hover:text-primary">EN</button>
+            </div>
         </nav>
     </div>
 </header>
@@ -689,6 +697,72 @@
         });
     }, { threshold: 0.12 });
     document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+</script>
+
+<script>
+// ===== Traduction FR <-> EN (échange de texte, sans toucher au HTML) =====
+(function(){
+    const DICT = {"Produit": "Product", "Marchés": "Markets", "Démo": "Demo", "Présentation": "Presentation", "Tarifs": "Pricing", "FAQ": "FAQ", "Contact": "Contact", "Essayer la démo": "Try the demo", "Navigation intérieure · Safe buildings": "Indoor navigation · Safe buildings", "Le GPS s'arrête à l'entrée.": "GPS stops at the entrance.", "QRMap commence là.": "QRMap takes over.", "Transformez un simple QR code imprimé en guide interactif 2D/3D. Sans GPS. Sans application. Depuis n'importe quel smartphone.": "Turn a simple printed QR code into an interactive 2D/3D guide. No GPS. No app. From any smartphone.", "Voir la présentation": "View presentation", "En savoir plus": "Learn more", "Sans GPS": "No GPS", "Sans app store": "No app store", "Offline-ready": "Offline-ready", "Destination": "Destination", "Service Cardiologie": "Cardiology Dept.", "2 min": "2 min", "QR scanné": "QR scanned", "Le constat": "The problem", "Le GPS s'arrête à l'entrée des bâtiments.": "GPS stops at the door of buildings.", "10 à 25 min": "10 to 25 min", "perdues par visiteur": "lost per visitor", "dans les grands bâtiments à cause d'une signalétique insuffisante : hôpitaux, administrations, campus, centres commerciaux.": "in large buildings due to poor signage: hospitals, government offices, campuses, shopping malls.", "0 solution": "0 solution", "locale déployée": "deployed locally", "aucune navigation intérieure commerciale n'est déployée au Cameroun aujourd'hui, quel que soit le type de bâtiment.": "no commercial indoor navigation is deployed in Cameroon today, whatever the building type.", "Des milliers": "Thousands", "de visiteurs par jour": "of visitors per day", "dans les hôpitaux, banques, administrations et grands événements — sans aucun système d'orientation dynamique.": "in hospitals, banks, government offices and large events — with no dynamic wayfinding system.", "Comment ça marche": "How it works", "3 étapes. Aucune infrastructure.": "3 steps. No infrastructure.", "On cartographie": "We map it", "Nous modélisons votre bâtiment : étages, salles, couloirs, points d'intérêt.": "We model your building: floors, rooms, corridors, points of interest.", "On installe les QR codes": "We install the QR codes", "Impression et placement aux points stratégiques. Aucun matériel spécifique.": "Printed and placed at key points. No special hardware.", "Vos visiteurs scannent": "Your visitors scan", "Un scan suffit pour ouvrir le plan interactif. Aucune installation requise.": "One scan opens the interactive map. No install required.", "Ouvrir la démo": "Open the demo", "Scannez, comme vos visiteurs le feront.": "Scan it, just like your visitors will.", "Ce QR ouvre la démo QRMap.": "This QR opens the QRMap demo.", "Une plateforme. Six super-pouvoirs.": "One platform. Six superpowers.", "Navigation 2D interactive": "Interactive 2D navigation", "Plans d'étage dynamiques mis à jour en temps réel.": "Dynamic floor plans updated in real time.", "Visualisation 3D immersive": "Immersive 3D visualization", "Rendu THREE.js du bâtiment, rotation et exploration libre.": "THREE.js building render, free rotation and exploration.", "PWA offline-ready": "Offline-ready PWA", "Fonctionne en 2G/3G. Aucun téléchargement sur app store.": "Works on 2G/3G. No app store download.", "Tableau de bord analytique": "Analytics dashboard", "Statistiques de scans en temps réel, données d'affluence, rapports.": "Real-time scan stats, footfall data, reports.", "Architecture multi-sites": "Multi-site architecture", "Une plateforme pour un réseau hospitalier, une université ou une banque.": "One platform for a hospital network, a university or a bank.", "Module évacuation d'urgence": "Emergency evacuation module", "Guidage dynamique vers les sorties, conforme sécurité incendie.": "Dynamic guidance to exits, fire-safety compliant.", "Conçu pour les infrastructures qui comptent.": "Built for the infrastructure that matters.", "Santé": "Healthcare", "Hôpitaux, cliniques, centres d'urgence.": "Hospitals, clinics, emergency centers.", "Banques": "Banks", "Agences multi-niveaux, expérience client.": "Multi-level branches, customer experience.", "Administrations": "Government", "Ministères, mairies, CNPS.": "Ministries, city halls, public agencies.", "Universités": "Universities", "Campus, grandes écoles.": "Campuses, higher-education schools.", "Entreprises": "Enterprises", "Bâtiments privés à multiniveaux.": "Private multi-level buildings.", "Événements": "Events", "Foires, salons, conférences, concerts : un plan temporaire déployé en quelques jours.": "Fairs, expos, conferences, concerts: a temporary map deployed in a few days.", "< 2 min": "< 2 min", "Délai d'orientation visé": "Target wayfinding time", "vs 10–25 min aujourd'hui": "vs 10–25 min today", "200 sites": "200 sites", "Marché adressable": "Addressable market", "au Cameroun": "in Cameroon", "Pénétration mobile": "Mobile penetration", "0 FCFA": "0 FCFA", "Matériel spécifique": "Special hardware", "requis": "required", "Une offre pour chaque bâtiment.": "A plan for every building.", "installation": "installation", "abonnement annuel": "annual subscription", "à la plateforme. Le tarif s'adapte à la taille de votre site.": "to the platform. Pricing scales with the size of your site.", "Starter": "Starter", "Le site unique": "The single site", "Pour une clinique, une agence bancaire ou une administration à site unique.": "For a clinic, a bank branch or a single-site government office.", "Sur devis": "On quote", "Installation + abonnement annuel": "Installation + annual subscription", "1 bâtiment · jusqu'à 3 étages": "1 building · up to 3 floors", "Jusqu'à 10 QR codes": "Up to 10 QR codes", "Jusqu'à 20 destinations": "Up to 20 destinations", "Mises à jour à distance": "Remote updates", "Support email & WhatsApp": "Email & WhatsApp support", "Demander un devis": "Request a quote", "Le plus choisi": "Most popular", "Pro": "Pro", "Le bâtiment complexe": "The complex building", "Pour un hôpital, un centre commercial, une université ou un grand siège.": "For a hospital, a mall, a university or a large HQ.", "Jusqu'à 3 bâtiments · étages étendus": "Up to 3 buildings · extended floors", "Jusqu'à 40 QR codes": "Up to 40 QR codes", "Jusqu'à 60 destinations": "Up to 60 destinations", "Tout le Starter + vue 3D immersive": "Everything in Starter + immersive 3D view", "Support prioritaire": "Priority support", "Enterprise": "Enterprise", "Le réseau multi-sites": "The multi-site network", "Pour un réseau hospitalier, un groupe bancaire ou une université multi-campus.": "For a hospital network, a banking group or a multi-campus university.", "Sur mesure": "Custom", "Tarification dédiée": "Dedicated pricing", "Bâtiments, étages, QR & destinations illimités": "Unlimited buildings, floors, QR codes & destinations", "Tout le Pro + gestion multi-sites centralisée": "Everything in Pro + centralized multi-site management", "Intégrations sur mesure": "Custom integrations", "Accompagnement dédié": "Dedicated onboarding", "Engagement de service (SLA)": "Service-level agreement (SLA)", "Nous consulter": "Contact us", "parlons de votre projet": "let's talk about your project", "À propos": "About", "Conçu au Cameroun, pensé pour l'Afrique.": "Built in Cameroon, made for Africa.", "QRMap est né d'un constat simple : chaque jour, des milliers de visiteurs se perdent dans nos hôpitaux, banques, universités et administrations, faute de repères. Nous avons créé la première solution de navigation intérieure conçue pour nos réalités : mobile-first, légère, sans application à installer et sans infrastructure coûteuse. Notre ambition : qu'on ne se perde plus jamais dans un bâtiment, à Yaoundé comme partout en Afrique.": "QRMap was born from a simple observation: every day, thousands of visitors get lost in our hospitals, banks, universities and government offices, for lack of guidance. We built the first indoor navigation solution designed for our realities: mobile-first, lightweight, with no app to install and no costly infrastructure. Our ambition: that no one ever gets lost in a building again, in Yaoundé as everywhere in Africa.", "Questions fréquentes.": "Frequently asked questions.", "Faut-il installer une application ?": "Do I need to install an app?", "Non. QRMap fonctionne directement dans le navigateur de votre téléphone. Scannez le QR code, le plan s'ouvre immédiatement.": "No. QRMap runs directly in your phone's browser. Scan the QR code and the map opens instantly.", "Faut-il une connexion internet ?": "Do I need an internet connection?", "Une connexion suffit au premier chargement. QRMap est conçu pour les connexions lentes (2G/3G) et reste utilisable ensuite même si le réseau est instable à l'intérieur du bâtiment.": "A connection is only needed for the first load. QRMap is built for slow connections (2G/3G) and stays usable even if the network is unstable inside the building.", "Ça marche sur tous les téléphones ?": "Does it work on all phones?", "Oui, sur tout smartphone capable de scanner un QR code — soit via l'appareil photo, soit via une application de scan. Aucun téléphone récent ou haut de gamme n'est nécessaire.": "Yes, on any smartphone that can scan a QR code — either via the camera or a scanning app. No recent or high-end phone required.", "Combien de temps prend le déploiement ?": "How long does deployment take?", "Selon la taille du bâtiment, de quelques jours à quelques semaines : cartographie, génération des QR codes, impression et pose. Aucun capteur, aucune balise, aucun câblage.": "Depending on the building size, from a few days to a few weeks: mapping, QR code generation, printing and installation. No sensors, no beacons, no wiring.", "Et si mon bâtiment change (travaux, nouveaux services) ?": "What if my building changes (renovations, new services)?", "Le plan est mis à jour à distance depuis notre plateforme. Les QR codes déjà affichés restent valables : ils pointent toujours vers la version à jour.": "The map is updated remotely from our platform. QR codes already posted stay valid: they always point to the latest version.", "QRMap fonctionne-t-il pour un événement temporaire ?": "Does QRMap work for a temporary event?", "Oui. Foires, salons, conférences, concerts : nous déployons un plan temporaire en quelques jours, retiré à la fin de l'événement.": "Yes. Fairs, expos, conferences, concerts: we deploy a temporary map in a few days, removed at the end of the event.", "votre bâtiment": "your building", "Les premiers déploiements pilotes sont en préparation. Rejoignez les organisations qui transforment l'expérience de leurs visiteurs.": "The first pilot deployments are underway. Join the organizations transforming their visitors' experience.", "Planifier une démonstration gratuite": "Schedule a free demo", "Télécharger le dossier de présentation": "Download the pitch deck", "Parlez-nous de votre bâtiment": "Tell us about your building", "Remplissez ce formulaire, nous vous recontactons rapidement.": "Fill in this form and we'll get back to you quickly.", "Nom complet *": "Full name *", "Organisation *": "Organization *", "Téléphone / WhatsApp *": "Phone / WhatsApp *", "Email": "Email", "Type de bâtiment": "Building type", "Hôpital / Clinique": "Hospital / Clinic", "Banque": "Bank", "Administration": "Government office", "Université / École": "University / School", "Centre commercial": "Shopping mall", "Événement (foire, salon, concert)": "Event (fair, expo, concert)", "Autre": "Other", "Message": "Message", "Être recontacté": "Get contacted", "Mentions légales": "Legal notice", "Éditeur :": "Publisher:", "QRMap, Yaoundé, Cameroun.": "QRMap, Yaoundé, Cameroon.", "Contact :": "Contact:", "· WhatsApp": "· WhatsApp", "Hébergeur :": "Host:", "à renseigner.": "to be provided.", "Confidentialité": "Privacy", "Les informations transmises via le formulaire (nom, organisation, téléphone, email, message) sont utilisées": "The information submitted via the form (name, organization, phone, email, message) is used", "uniquement pour vous recontacter": "solely to contact you back", "Elles ne sont ni revendues, ni cédées à des tiers. Vous pouvez demander leur suppression à tout moment via": "It is never resold or shared with third parties. You may request its deletion at any time via", "Le GPS s'arrête à l'entrée. QRMap commence là.": "GPS stops at the entrance. QRMap takes over.", "Navigation intérieure 2D/3D · Sans GPS · Sans installation · Activé par un scan QR": "Indoor navigation 2D/3D · No GPS · No install · Powered by a QR scan", "Navigation": "Navigation", "Yaoundé, Cameroun": "Yaoundé, Cameroon", "WhatsApp : +237 695 249 549": "WhatsApp: +237 695 249 549", "© 2026 QRMap · Yaoundé, Cameroun · contact@qrmap.app": "© 2026 QRMap · Yaoundé, Cameroon · contact@qrmap.app", "Made with ◆ in Africa": "Made with ◆ in Africa", "Votre nom": "Your name", "Votre structure": "Your organization", "+237 6XX XXX XXX": "+237 6XX XXX XXX", "vous@exemple.com": "you@example.com", "Décrivez votre besoin...": "Describe your need..."};           // FR -> EN
+    let snapshot = null;             // textes FR d'origine (nœuds + placeholders)
+
+    function collectNodes(){
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+            acceptNode(n){
+                if(!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                const p = n.parentNode;
+                if(p && (p.nodeName === 'SCRIPT' || p.nodeName === 'STYLE')) return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        });
+        const nodes = []; let n;
+        while(n = walker.nextNode()) nodes.push(n);
+        return nodes;
+    }
+
+    function snap(){
+        // mémorise le FR d'origine une seule fois
+        const nodes = collectNodes();
+        snapshot = { text: nodes.map(n => ({node:n, fr:n.nodeValue})),
+                     ph: Array.from(document.querySelectorAll('[placeholder]')).map(e => ({el:e, fr:e.getAttribute('placeholder')})) };
+    }
+
+    window.setLang = function(lang){
+        if(!snapshot) snap();
+        const toEN = (lang === 'en');
+        // Textes
+        snapshot.text.forEach(item => {
+            const raw = item.fr;
+            const key = raw.trim();
+            if(toEN && DICT[key]){
+                item.node.nodeValue = raw.replace(key, DICT[key]);
+            } else {
+                item.node.nodeValue = raw; // restaure FR
+            }
+        });
+        // Placeholders
+        snapshot.ph.forEach(item => {
+            const key = (item.fr||'').trim();
+            item.el.setAttribute('placeholder', (toEN && DICT[key]) ? DICT[key] : item.fr);
+        });
+        // <html lang> + mémorisation
+        document.documentElement.setAttribute('lang', lang);
+        try { localStorage.setItem('qrmap-lang', lang); } catch(e){}
+        // état visuel des boutons
+        document.querySelectorAll('[data-lang-btn]').forEach(b => {
+            const on = b.getAttribute('data-lang-btn') === lang;
+            b.classList.toggle('text-primary', on);
+            b.classList.toggle('font-bold', on);
+        });
+        try { trackEvent('switch_lang', { lang: lang }); } catch(e){}
+    };
+
+    // Appliquer la préférence mémorisée au chargement (défaut FR)
+    document.addEventListener('DOMContentLoaded', function(){
+        let saved = 'fr';
+        try { saved = localStorage.getItem('qrmap-lang') || 'fr'; } catch(e){}
+        if(saved === 'en') setLang('en'); else setLang('fr');
+    });
+})();
 </script>
 </body>
 </html>
