@@ -585,7 +585,7 @@
             <p class="text-primary font-semibold text-xs uppercase tracking-wider mb-3">Mentions légales</p>
             <p><strong class="text-ink">Éditeur :</strong> QRMap, Yaoundé, Cameroun.</p>
             <p class="mt-2"><strong class="text-ink">Contact :</strong> <a class="text-primary hover:underline" href="mailto:contact@qrmap.app">contact@qrmap.app</a> · WhatsApp <a class="text-primary hover:underline" href="https://wa.me/237695249549">+237 695 249 549</a>.</p>
-            <p class="mt-2"><strong class="text-ink">Hébergeur :</strong> <!-- TODO: renseigner l'hébergeur retenu --> à renseigner.</p>
+            <p class="mt-2"><strong class="text-ink">Hébergement sécurisé</strong> <!-- TODO: renseigner l'hébergeur retenu --></p>
         </div>
         <div id="confidentialite">
             <p class="text-primary font-semibold text-xs uppercase tracking-wider mb-3">Confidentialité</p>
