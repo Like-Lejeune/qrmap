@@ -103,8 +103,8 @@
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-ink-2">
             <a href="#produit" class="hover:text-primary transition">Produit</a>
             <a href="#marches" class="hover:text-primary transition">Marchés</a>
-            <a href="/demo" class="hover:text-primary transition inline-flex items-center gap-1">Démo</a>
-            <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'navbar'})" class="hover:text-primary transition"><i data-lucide="play" class="w-3.5 h-3.5"></i>Présentation</a>
+            <a href="/demo" class="hover:text-primary transition inline-flex items-center gap-1"><i data-lucide="play" class="w-3.5 h-3.5"></i> Démo</a>
+            <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'navbar'})" class="hover:text-primary transition">Présentation</a>
             <a href="#tarifs" class="hover:text-primary transition">Tarifs</a>
             <a href="#faq" class="hover:text-primary transition">FAQ</a>
             <a href="#contact" class="hover:text-primary transition">Contact</a>
@@ -113,8 +113,8 @@
             -->
         </nav>
         <div class="flex items-center gap-3">
-            <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
-                Voir la présentation<i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <a href="/demo" onclick="trackEvent('click_demo',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
+                Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
             <!-- Bouton hamburger (mobile uniquement) -->
             <button id="menuBtn" onclick="toggleMenu()" aria-label="Ouvrir le menu" aria-expanded="false" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-border text-ink hover:border-primary transition">
@@ -159,6 +159,7 @@
             </p>
             <div class="mt-10 flex flex-wrap gap-4">
                 <a href="/demo" onclick="trackEvent('click_demo',{source:'hero'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'hero'})" class="inline-flex items-center gap-2 rounded-full border border-primary/40 px-7 py-4 text-sm font-semibold text-white hover:bg-primary/10 transition"><i data-lucide="play" class="w-4 h-4 text-primary"></i> Voir la présentation</a>
                 <a href="#produit" class="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-4 text-sm font-semibold text-white hover:bg-white/10 transition">En savoir plus</a>
             </div>
             <div class="mt-10 flex items-center gap-6 text-xs text-white/50">
@@ -389,37 +390,77 @@
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
         <div class="text-center max-w-2xl mx-auto" data-reveal>
             <p class="text-primary font-semibold text-sm uppercase tracking-wider mb-4">Tarifs</p>
-            <h2 class="font-display text-4xl sm:text-5xl font-bold text-ink leading-tight">Choisissez votre plan.</h2>
+            <h2 class="font-display text-4xl sm:text-5xl font-bold text-ink leading-tight">Une offre pour chaque bâtiment.</h2>
+            <p class="mt-5 text-muted-foreground leading-relaxed">Chaque forfait comprend une <strong class="text-ink">installation</strong> (paiement unique) et un <strong class="text-ink">abonnement annuel</strong> à la plateforme. Le tarif s'adapte à la taille de votre site.</p>
         </div>
-        <div class="mt-16 grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            <div data-reveal class="rounded-3xl bg-white border border-border p-10">
-                <p class="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Installation</p>
-                <h3 class="mt-3 font-display text-2xl font-bold text-ink">Mise en service</h3>
-                <p class="mt-6 font-display text-4xl font-bold text-ink">Sur devis</p>
-                <p class="text-sm text-muted-foreground">Selon la taille et la complexité du bâtiment</p>
-                <ul class="mt-8 space-y-3 text-sm text-ink-2">
-                    <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Modélisation 3D du bâtiment</li>
-                    <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Configuration sur mesure</li>
-                    <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Génération des QR codes</li>
-                    <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Formation administrateurs</li>
+
+        <div class="mt-16 grid lg:grid-cols-3 gap-6 items-stretch">
+
+            <!-- STARTER -->
+            <div data-reveal class="flex flex-col rounded-3xl bg-white border border-border p-8">
+                <p class="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Starter</p>
+                <h3 class="mt-2 font-display text-2xl font-bold text-ink">Le site unique</h3>
+                <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Pour une clinique, une agence bancaire ou une administration à site unique.</p>
+                <div class="mt-6 pb-6 border-b border-border">
+                    <p class="font-display text-3xl font-bold text-ink">Sur devis</p>
+                    <p class="text-xs text-muted-foreground mt-1">Installation + abonnement annuel</p>
+                </div>
+                <ul class="mt-6 space-y-3 text-sm text-ink-2 flex-1">
+                    <li class="flex gap-3"><i data-lucide="building" class="w-5 h-5 text-primary shrink-0"></i>1 bâtiment · jusqu'à 3 étages</li>
+                    <li class="flex gap-3"><i data-lucide="qr-code" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 10 QR codes</li>
+                    <li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 20 destinations</li>
+                    <li class="flex gap-3"><i data-lucide="map" class="w-5 h-5 text-primary shrink-0"></i>Navigation 2D interactive</li>
+                    <li class="flex gap-3"><i data-lucide="refresh-cw" class="w-5 h-5 text-primary shrink-0"></i>Mises à jour à distance</li>
+                    <li class="flex gap-3"><i data-lucide="message-circle" class="w-5 h-5 text-primary shrink-0"></i>Support email & WhatsApp</li>
                 </ul>
-                <a href="#contact" class="mt-10 inline-flex w-full justify-center rounded-full border border-ink px-6 py-3.5 text-sm font-semibold text-ink hover:bg-ink hover:text-white transition">Demander un devis</a>
+                <a href="#contact" onclick="trackEvent('click_pricing',{plan:'starter'})" class="mt-8 inline-flex w-full justify-center rounded-full border border-ink px-6 py-3.5 text-sm font-semibold text-ink hover:bg-ink hover:text-white transition">Demander un devis</a>
             </div>
-            <div data-reveal style="animation-delay:100ms" class="relative rounded-3xl bg-ink text-white p-10 border border-primary glow-green">
-                <span class="absolute -top-3 left-10 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">Récurrent</span>
-                <p class="text-sm font-semibold text-primary uppercase tracking-wider">Abonnement SaaS</p>
-                <h3 class="mt-3 font-display text-2xl font-bold">Plateforme annuelle</h3>
-                <p class="mt-6 font-display text-4xl font-bold">Sur devis</p>
-                <p class="text-sm text-white/60">Abonnement annuel, selon le nombre d'étages, de destinations et de QR codes</p>
-                <ul class="mt-8 space-y-3 text-sm text-white/80">
-                    <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Hébergement sécurisé</li>
-                    <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Mises à jour continues</li>
-                    <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Support technique</li>
-                    <li class="flex gap-3"><i data-lucide="check" class="w-5 h-5 text-primary shrink-0"></i>Accès tableau de bord analytique</li>
+
+            <!-- PRO (mis en avant) -->
+            <div data-reveal style="animation-delay:100ms" class="relative flex flex-col rounded-3xl bg-ink text-white p-8 border border-primary glow-green lg:scale-[1.03]">
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold text-primary-foreground whitespace-nowrap">Le plus choisi</span>
+                <p class="text-sm font-semibold text-primary uppercase tracking-wider">Pro</p>
+                <h3 class="mt-2 font-display text-2xl font-bold">Le bâtiment complexe</h3>
+                <p class="mt-2 text-sm text-white/60 leading-relaxed">Pour un hôpital, un centre commercial, une université ou un grand siège.</p>
+                <div class="mt-6 pb-6 border-b border-white/10">
+                    <p class="font-display text-3xl font-bold">Sur devis</p>
+                    <p class="text-xs text-white/50 mt-1">Installation + abonnement annuel</p>
+                </div>
+                <ul class="mt-6 space-y-3 text-sm text-white/85 flex-1">
+                    <li class="flex gap-3"><i data-lucide="building-2" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 3 bâtiments · étages étendus</li>
+                    <li class="flex gap-3"><i data-lucide="qr-code" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 40 QR codes</li>
+                    <li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 60 destinations</li>
+                    <li class="flex gap-3"><i data-lucide="box" class="w-5 h-5 text-primary shrink-0"></i>Tout le Starter + vue 3D immersive</li>
+                    <li class="flex gap-3"><i data-lucide="bar-chart-3" class="w-5 h-5 text-primary shrink-0"></i>Tableau de bord analytique</li>
+                    <li class="flex gap-3"><i data-lucide="siren" class="w-5 h-5 text-primary shrink-0"></i>Module évacuation d'urgence</li>
+                    <li class="flex gap-3"><i data-lucide="zap" class="w-5 h-5 text-primary shrink-0"></i>Support prioritaire</li>
                 </ul>
-                <a href="#contact" class="mt-10 inline-flex w-full justify-center rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition">Demander un devis</a>
+                <a href="#contact" onclick="trackEvent('click_pricing',{plan:'pro'})" class="mt-8 inline-flex w-full justify-center rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition">Demander un devis</a>
+            </div>
+
+            <!-- ENTERPRISE -->
+            <div data-reveal style="animation-delay:200ms" class="flex flex-col rounded-3xl bg-white border border-border p-8">
+                <p class="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Enterprise</p>
+                <h3 class="mt-2 font-display text-2xl font-bold text-ink">Le réseau multi-sites</h3>
+                <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Pour un réseau hospitalier, un groupe bancaire ou une université multi-campus.</p>
+                <div class="mt-6 pb-6 border-b border-border">
+                    <p class="font-display text-3xl font-bold text-ink">Sur mesure</p>
+                    <p class="text-xs text-muted-foreground mt-1">Tarification dédiée</p>
+                </div>
+                <ul class="mt-6 space-y-3 text-sm text-ink-2 flex-1">
+                    <li class="flex gap-3"><i data-lucide="network" class="w-5 h-5 text-primary shrink-0"></i>Bâtiments, étages, QR & destinations illimités</li>
+                    <li class="flex gap-3"><i data-lucide="layout-dashboard" class="w-5 h-5 text-primary shrink-0"></i>Tout le Pro + gestion multi-sites centralisée</li>
+                    <li class="flex gap-3"><i data-lucide="plug" class="w-5 h-5 text-primary shrink-0"></i>Intégrations sur mesure</li>
+                    <li class="flex gap-3"><i data-lucide="user-check" class="w-5 h-5 text-primary shrink-0"></i>Accompagnement dédié</li>
+                    <li class="flex gap-3"><i data-lucide="shield-check" class="w-5 h-5 text-primary shrink-0"></i>Engagement de service (SLA)</li>
+                </ul>
+                <a href="#contact" onclick="trackEvent('click_pricing',{plan:'enterprise'})" class="mt-8 inline-flex w-full justify-center rounded-full border border-ink px-6 py-3.5 text-sm font-semibold text-ink hover:bg-ink hover:text-white transition">Nous consulter</a>
             </div>
         </div>
+
+        <p class="mt-10 text-center text-sm text-muted-foreground max-w-2xl mx-auto">
+            Besoin de dépasser les limites d'un forfait (QR codes ou destinations supplémentaires) ? C'est possible : <a href="#contact" class="text-primary hover:underline">parlons de votre projet</a>.
+        </p>
     </div>
 </section>
 
@@ -428,8 +469,8 @@
     <div class="absolute inset-0 grid-bg opacity-30"></div>
     <div class="relative mx-auto max-w-3xl px-5 sm:px-8 text-center" data-reveal>
         <p class="text-primary font-semibold text-sm uppercase tracking-wider mb-4">À propos</p>
-        <h2 class="font-display text-4xl sm:text-5xl font-bold leading-tight">Conçu au Cameroun, pensé pour tous.</h2>
-        <p class="mt-8 text-lg text-white/70 leading-relaxed">QRMap est né d'un constat simple : chaque jour, des milliers de visiteurs se perdent dans nos hôpitaux, banques, universités et administrations, faute de repères. Nous avons créé la première solution de navigation intérieure conçue pour nos réalités : mobile-first, légère, sans application à installer et sans infrastructure coûteuse. Notre ambition : qu'on ne se perde plus jamais dans un bâtiment, à Yaoundé comme partout ailleurs.</p>
+        <h2 class="font-display text-4xl sm:text-5xl font-bold leading-tight">Conçu au Cameroun, pensé pour l'Afrique.</h2>
+        <p class="mt-8 text-lg text-white/70 leading-relaxed">QRMap est né d'un constat simple : chaque jour, des milliers de visiteurs se perdent dans nos hôpitaux, banques, universités et administrations, faute de repères. Nous avons créé la première solution de navigation intérieure conçue pour nos réalités : mobile-first, légère, sans application à installer et sans infrastructure coûteuse. Notre ambition : qu'on ne se perde plus jamais dans un bâtiment, à Yaoundé comme partout en Afrique.</p>
         <!-- TODO: ajouter photo/équipe quand disponible -->
     </div>
 </section>
