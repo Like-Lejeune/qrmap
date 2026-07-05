@@ -622,7 +622,7 @@
         <div>
             <p class="font-display font-bold text-white mb-4">Contact</p>
             <ul class="space-y-2 text-sm">
-                <li>Yaoundé, Cameroun</li>
+                <li>Gare marchande - Yaoundé, Cameroun</li>
                 <li><a class="hover:text-primary" href="mailto:contact@qrmap.app">contact@qrmap.app</a></li>
                 <li><a class="hover:text-primary" href="https://wa.me/237695249549">WhatsApp : +237 695 249 549</a></li>
             </ul>
@@ -630,7 +630,7 @@
     </div>
     <div class="border-t border-white/10">
         <div class="mx-auto max-w-7xl px-5 sm:px-8 py-6 text-xs text-white/40 flex flex-wrap items-center justify-between gap-3">
-            <p>© 2026 QRMap · Yaoundé, Cameroun · contact@qrmap.app</p>
+            <p>© 2026 QRMap · Gare marchande - Yaoundé, Cameroun · contact@qrmap.app</p>
             <p class="flex items-center gap-3"><a href="#mentions" class="hover:text-primary">Mentions légales</a><span class="text-white/20">·</span><a href="#confidentialite" class="hover:text-primary">Confidentialité</a><span class="text-white/20">·</span><span>Made with ◆ in Africa</span></p>
         </div>
     </div>
