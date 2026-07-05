@@ -115,8 +115,8 @@
             </span>
         </nav>
         <div class="flex items-center gap-3">
-            <a href="/demo" onclick="trackEvent('click_demo',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
-                Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'navbar'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">
+                Voir la présentation <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
             <!-- Bouton hamburger (mobile uniquement) -->
             <button id="menuBtn" onclick="toggleMenu()" aria-label="Ouvrir le menu" aria-expanded="false" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-border text-ink hover:border-primary transition">
@@ -130,8 +130,8 @@
         <nav class="mx-auto max-w-7xl px-5 sm:px-8 py-4 flex flex-col gap-1 text-sm font-medium text-ink-2">
             <a href="#produit" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">Produit</a>
             <a href="#marches" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">Marchés</a>
-            <a href="/demo" onclick="closeMenu();trackEvent('click_demo',{source:'mobile_menu'})" class="py-3 border-b border-border/60 hover:text-primary transition inline-flex items-center gap-1.5"><i data-lucide="play" class="w-3.5 h-3.5"></i> Démo</a>
-            <a href="/presentation/" onclick="closeMenu();trackEvent('click_presentation',{source:'mobile_menu'})" class="py-3 border-b border-border/60 hover:text-primary transition">Présentation</a>
+            <a href="/demo" onclick="closeMenu();trackEvent('click_demo',{source:'mobile_menu'})" class="py-3 border-b border-border/60 hover:text-primary transition inline-flex items-center gap-1.5"> Démo</a>
+            <a href="/presentation/" onclick="closeMenu();trackEvent('click_presentation',{source:'mobile_menu'})" class="py-3 border-b border-border/60 hover:text-primary transition"><i data-lucide="play" class="w-3.5 h-3.5"></i> Présentation</a>
             <a href="#tarifs" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">Tarifs</a>
             <a href="#faq" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">FAQ</a>
             <a href="#contact" onclick="closeMenu()" class="py-3 border-b border-border/60 hover:text-primary transition">Contact</a>
@@ -167,7 +167,6 @@
             </p>
             <div class="mt-10 flex flex-wrap gap-4">
                 <a href="/demo" onclick="trackEvent('click_demo',{source:'hero'})" class="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Essayer la démo <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-                <a href="/presentation/" onclick="trackEvent('click_presentation',{source:'hero'})" class="inline-flex items-center gap-2 rounded-full border border-primary/40 px-7 py-4 text-sm font-semibold text-white hover:bg-primary/10 transition"><i data-lucide="play" class="w-4 h-4 text-primary"></i> Voir la présentation</a>
                 <a href="#produit" class="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-4 text-sm font-semibold text-white hover:bg-white/10 transition">En savoir plus</a>
             </div>
             <div class="mt-10 flex items-center gap-6 text-xs text-white/50">
@@ -313,8 +312,8 @@
             </div>
             <div data-reveal style="animation-delay:80ms" class="group rounded-2xl bg-white/[0.04] border border-white/10 border-l-4 border-l-primary p-7 hover:bg-white/[0.07] hover:-translate-y-1 transition-all duration-300">
                 <div class="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-5"><i data-lucide="building-2" class="w-6 h-6 text-primary"></i></div>
-                <h3 class="font-display text-lg font-bold">Visualisation 3D immersive</h3>
-                <p class="mt-2 text-sm text-white/60 leading-relaxed">Rendu THREE.js du bâtiment, rotation et exploration libre.</p>
+                <h3 class="font-display text-lg font-bold">Visualisation immersive</h3>
+                <p class="mt-2 text-sm text-white/60 leading-relaxed">Rendu du bâtiment et exploration libre.</p>
             </div>
             <div data-reveal style="animation-delay:160ms" class="group rounded-2xl bg-white/[0.04] border border-white/10 border-l-4 border-l-primary p-7 hover:bg-white/[0.07] hover:-translate-y-1 transition-all duration-300">
                 <div class="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-5"><i data-lucide="smartphone" class="w-6 h-6 text-primary"></i></div>
@@ -436,9 +435,9 @@
                 </div>
                 <ul class="mt-6 space-y-3 text-sm text-white/85 flex-1">
                     <li class="flex gap-3"><i data-lucide="building-2" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 3 bâtiments · étages étendus</li>
-                    <li class="flex gap-3"><i data-lucide="qr-code" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 40 QR codes</li>
-                    <li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 60 destinations</li>
-                    <li class="flex gap-3"><i data-lucide="box" class="w-5 h-5 text-primary shrink-0"></i>Tout le Starter + vue 3D immersive</li>
+                    <li class="flex gap-3"><i data-lucide="qr-code" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 25 QR codes</li>
+                    <li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 50 destinations</li>
+                    <li class="flex gap-3"><i data-lucide="box" class="w-5 h-5 text-primary shrink-0"></i>Tout le Starter</li>
                     <li class="flex gap-3"><i data-lucide="bar-chart-3" class="w-5 h-5 text-primary shrink-0"></i>Tableau de bord analytique</li>
                     <li class="flex gap-3"><i data-lucide="siren" class="w-5 h-5 text-primary shrink-0"></i>Module évacuation d'urgence</li>
                     <li class="flex gap-3"><i data-lucide="zap" class="w-5 h-5 text-primary shrink-0"></i>Support prioritaire</li>
@@ -477,8 +476,8 @@
     <div class="absolute inset-0 grid-bg opacity-30"></div>
     <div class="relative mx-auto max-w-3xl px-5 sm:px-8 text-center" data-reveal>
         <p class="text-primary font-semibold text-sm uppercase tracking-wider mb-4">À propos</p>
-        <h2 class="font-display text-4xl sm:text-5xl font-bold leading-tight">Conçu au Cameroun, pensé pour l'Afrique.</h2>
-        <p class="mt-8 text-lg text-white/70 leading-relaxed">QRMap est né d'un constat simple : chaque jour, des milliers de visiteurs se perdent dans nos hôpitaux, banques, universités et administrations, faute de repères. Nous avons créé la première solution de navigation intérieure conçue pour nos réalités : mobile-first, légère, sans application à installer et sans infrastructure coûteuse. Notre ambition : qu'on ne se perde plus jamais dans un bâtiment, à Yaoundé comme partout en Afrique.</p>
+        <h2 class="font-display text-4xl sm:text-5xl font-bold leading-tight">Conçu au Cameroun, pensé pour tous.</h2>
+        <p class="mt-8 text-lg text-white/70 leading-relaxed">QRMap est né d'un constat simple : chaque jour, des milliers de visiteurs se perdent dans nos hôpitaux, banques, universités et administrations, faute de repères. Nous avons créé la première solution de navigation intérieure conçue pour nos réalités : mobile-first, légère, sans application à installer et sans infrastructure coûteuse. Notre ambition : qu'on ne se perde plus jamais dans un bâtiment, à Yaoundé comme partout ailleurs.</p>
         <!-- TODO: ajouter photo/équipe quand disponible -->
     </div>
 </section>
@@ -525,7 +524,7 @@
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-primary/20 blur-[160px]"></div>
     <div class="relative mx-auto max-w-4xl px-5 sm:px-8 text-center" data-reveal>
         <h2 class="font-display text-4xl sm:text-6xl font-bold leading-tight">Prêt à cartographier <span class="text-primary">votre bâtiment</span> ?</h2>
-        <p class="mt-6 text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">Les premiers déploiements pilotes sont en préparation. Rejoignez les organisations qui transforment l'expérience de leurs visiteurs.</p>
+        <p class="mt-6 text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">Rejoignez les organisations qui transforment l'expérience de leurs visiteurs.</p>
         <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
             <a href="mailto:contact@qrmap.app" class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground hover:bg-primary-dark transition glow-green">Planifier une démonstration gratuite <i data-lucide="arrow-right" class="w-5 h-5"></i></a>
             <a href="#" class="text-sm font-medium text-white/70 hover:text-primary underline underline-offset-4">Télécharger le dossier de présentation</a>
