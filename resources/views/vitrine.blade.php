@@ -181,7 +181,10 @@
             <div class="relative w-[300px] sm:w-[340px] h-[620px] rounded-[3rem] bg-gradient-to-b from-ink-2 to-black border border-white/10 p-4 shadow-2xl">
                 <div class="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full"></div>
                 <div class="w-full h-full rounded-[2.2rem] bg-mist overflow-hidden relative">
-                    <div class="absolute top-0 inset-x-0 h-10 flex items-center justify-between px-5 text-[10px] text-ink-2 font-medium"><span>9:41</span><span>QRMap</span></div>
+                   <div class="absolute top-0 inset-x-0 h-10 flex items-center justify-between px-5 text-[10px] text-ink-2 font-medium">
+                        <span id="live-clock">9:41</span>
+                        <span><span class="text-primary text-xs">◆</span>QRMap</span>
+                    </div>
                     <svg viewBox="0 0 300 540" class="absolute inset-0 w-full h-full">
                         <defs>
                             <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#0AAB6E" stroke-opacity="0.08" stroke-width="1"/></pattern>
@@ -436,7 +439,7 @@
                 <ul class="mt-6 space-y-3 text-sm text-white/85 flex-1">
                     <li class="flex gap-3"><i data-lucide="building-2" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 3 bâtiments · étages étendus</li>
                     <li class="flex gap-3"><i data-lucide="qr-code" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 25 QR codes</li>
-                    <li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 50 destinations</li>
+                    <li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-primary shrink-0"></i>Jusqu'à 60 destinations</li>
                     <li class="flex gap-3"><i data-lucide="box" class="w-5 h-5 text-primary shrink-0"></i>Tout le Starter</li>
                     <li class="flex gap-3"><i data-lucide="bar-chart-3" class="w-5 h-5 text-primary shrink-0"></i>Tableau de bord analytique</li>
                     <li class="flex gap-3"><i data-lucide="siren" class="w-5 h-5 text-primary shrink-0"></i>Module évacuation d'urgence</li>
@@ -762,6 +765,17 @@
         if(saved === 'en') setLang('en'); else setLang('fr');
     });
 })();
+</script>
+<script>
+    function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('live-clock').textContent = `${hours}:${minutes}`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000 * 30); // met à jour toutes les 30 secondes
 </script>
 </body>
 </html>
