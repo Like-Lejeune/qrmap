@@ -202,7 +202,7 @@
 
 <script>
 // ===== Compte à rebours =====
-const LAUNCH_DATE = new Date("2026-07-06T12:00:00+02:00").getTime();
+const LAUNCH_DATE = new Date("2026-07-06T12:00:00+01:00").getTime();
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, "0");
 
