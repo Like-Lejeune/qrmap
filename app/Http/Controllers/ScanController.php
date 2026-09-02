@@ -29,7 +29,7 @@ class ScanController extends Controller
             ? $building->floors->sortBy('level')->values()
             : collect();
  
-        return view('scan.show', compact(
+        return view('scan.show_AB', compact(
             'qrcode', 'site', 'building', 'currentFloor', 'allFloors'
         ));
     }

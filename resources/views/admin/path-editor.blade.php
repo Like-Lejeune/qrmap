@@ -30,6 +30,23 @@
         --open:rgba(79,255,176,.07);--open-stroke:rgba(79,255,176,.35);
         color-scheme:dark;
     }
+    :root[data-theme="light"]{
+        --bg:#f3f5f9;--bg2:#ffffff;--bg3:#eef1f6;--bg4:#e2e7ef;
+        --border:rgba(20,28,45,.10);--border2:rgba(20,28,45,.18);
+        --accent:#0aab6e;--accent2:#2f7fff;--warn:#c77b00;--danger:#d64545;
+        --text:#141c2d;--muted:#5b6577;--soft:rgba(10,171,110,.10);
+        --grid:rgba(20,28,45,.06);
+        --room:rgba(47,127,255,.10);--room-stroke:rgba(47,127,255,.40);
+        --open:rgba(10,171,110,.08);--open-stroke:rgba(10,171,110,.35);
+        color-scheme:light;
+    }
+    /* bascule des icônes lune/soleil */
+    .moon{display:block}.sun{display:none}
+    :root[data-theme="light"] .moon{display:none}
+    :root[data-theme="light"] .sun{display:block}
+    .tbtn{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+    .tbtn:hover{border-color:var(--border2)}
+    .tbtn svg{width:17px;height:17px}
     body{background:var(--bg);color:var(--text);font-family:var(--body);height:100vh;overflow:hidden;font-size:14px}
     .app{display:grid;grid-template-columns:300px 1fr;grid-template-rows:56px 1fr;height:100vh}
     .topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:var(--bg2);border-bottom:1px solid var(--border)}
@@ -98,6 +115,10 @@
     <div class="topbar">
         <div class="brand">QRMap <small>Éditeur de tracé</small></div>
         <div class="top-actions">
+            <button class="tbtn" onclick="toggleTheme()" aria-label="Basculer le thème" title="Thème clair / sombre" style="margin-right:4px">
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg>
+            </button>
             <a class="btn" href="{{ route('plan-editor.index') }}" style="width:auto;margin:0;padding:9px 14px">← Plans</a>
             <button class="btn accent" id="saveBtn" style="width:auto;margin:0;padding:9px 18px" disabled>Enregistrer le tracé</button>
         </div>
@@ -147,6 +168,11 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ===== Thème clair / sombre =====
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('qrmap-theme',t);}catch(e){}}
+function toggleTheme(){const c=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(c==='dark'?'light':'dark');if(typeof render==='function'){try{render();}catch(e){}}}
+(function(){let t='dark';try{t=localStorage.getItem('qrmap-theme')||'dark';}catch(e){}applyTheme(t);})();
+
 const VW=900,VH=600;
 const pxX=p=>(p/100)*VW, pxY=p=>(p/100)*VH;
 const pcX=x=>(x/VW)*100, pcY=y=>(y/VH)*100;

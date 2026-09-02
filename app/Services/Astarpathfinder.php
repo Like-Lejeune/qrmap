@@ -11,9 +11,15 @@
 //   peut donc passer librement à travers elles pour rejoindre la destination.
 // - Les autres pièces (bureaux, salles fermées, blocs...) sont des obstacles,
 //   SAUF si elles sont la destination ou contiennent le point de départ.
-// - Cette approche évite le piège des "îlots" : un point de départ ou
-//   d'arrivée à l'intérieur d'une pièce reste toujours connecté à son
-//   propre espace.
+//
+// ── NOUVEAU : POINT DE PORTE ──────────────────────────────────────────────
+// Une pièce peut désormais déclarer une PORTE : room['door'] = ['x'=>%, 'y'=>%].
+// - targetPoint($room) renvoie la porte si elle existe, sinon le centre.
+// - Quand on vise une porte, on appelle find(..., $solidEnd: true) : la pièce
+//   RESTE un obstacle, et le chemin s'arrête proprement sur le seuil au lieu
+//   de traverser les murs pour rejoindre un centre théorique.
+// - Avantage : plus besoin d'ajouter des zones d'accès artificielles sur le
+//   plan, et l'arrivée est plus réaliste (c'est une entrée, pas un milieu).
 //
 // MULTI-ÉTAGES :
 // - findConnectorRoom() localise l'ascenseur / l'escalier le plus pertinent
@@ -33,7 +39,7 @@ class AStarPathfinder
     // Mots-clés (insensibles à la casse) indiquant une zone TOUJOURS libre
     // (couloirs, halls, accueils, sorties, allées, galeries...) — ces pièces
     // ne bloquent jamais : le chemin peut passer à travers.
-    private const OPEN_KEYWORDS = [
+    public const OPEN_KEYWORDS = [
         'couloir', 'hall', 'accueil', 'sortie', 'entrée', 'entree',
         'escalier', 'ascenseur', 'attente', 'circulation', 'palier',
         'allée', 'allee', 'galerie', 'lobby', 'lounge', 'foyer',
@@ -41,19 +47,21 @@ class AStarPathfinder
     ];
 
     // Mots-clés identifiant un CONNECTEUR vertical (changement d'étage).
-    private const CONNECTOR_KEYWORDS = [
+    public const CONNECTOR_KEYWORDS = [
         'ascenseur', 'escalier', 'palier', 'élévateur', 'elevateur',
     ];
 
     /**
      * Calcule le chemin entre deux points sur un plan d'étage.
      *
-     * @param  array  $rooms    Tableau de pièces [{id, x, y, w, h, name}] (coordonnées en %)
-     * @param  array  $from     Point de départ  ['x' => float, 'y' => float] (en %)
-     * @param  array  $to       Point d'arrivée  ['x' => float, 'y' => float] (en %)
-     * @return array|null       Liste de waypoints [['x'=>float,'y'=>float]] ou null si impossible
+     * @param  array  $rooms     Pièces [{id, x, y, w, h, name, door?}] (coordonnées en %)
+     * @param  array  $from      Point de départ  ['x' => float, 'y' => float] (en %)
+     * @param  array  $to        Point d'arrivée  ['x' => float, 'y' => float] (en %)
+     * @param  bool   $solidEnd  true quand $to est une PORTE : la pièce d'arrivée
+     *                           reste un obstacle et le chemin s'arrête au seuil.
+     * @return array|null        Waypoints [['x'=>float,'y'=>float]] ou null
      */
-    public function find(array $rooms, array $from, array $to): ?array
+    public function find(array $rooms, array $from, array $to, bool $solidEnd = false): ?array
     {
         $G = self::GRID;
 
@@ -75,7 +83,7 @@ class AStarPathfinder
             $name = mb_strtolower($room['name'] ?? '');
 
             // Les zones de circulation (couloirs, halls, allées, etc.) restent libres
-            if ($this->isOpenZone($name)) {
+            if (self::isOpenZone($name)) {
                 continue;
             }
 
@@ -84,11 +92,18 @@ class AStarPathfinder
             $rw = (int) round((float) $room['w'] / 100 * $G);
             $rh = (int) round((float) $room['h'] / 100 * $G);
 
-            // Si le départ OU l'arrivée se trouve à l'intérieur de cette pièce,
-            // elle ne doit PAS être un obstacle (sinon le point est piégé).
-            $startInside = $this->pointInRect($startX, $startY, $rx, $ry, $rw, $rh);
-            $endInside   = $this->pointInRect($endX, $endY, $rx, $ry, $rw, $rh);
-            if ($startInside || $endInside) {
+            // Si le DÉPART se trouve à l'intérieur de cette pièce, elle ne doit
+            // pas être un obstacle (sinon le point de départ est piégé).
+            if ($this->pointInRect($startX, $startY, $rx, $ry, $rw, $rh)) {
+                continue;
+            }
+
+            // Si l'ARRIVÉE est à l'intérieur :
+            //  - mode "porte" ($solidEnd) : la pièce reste solide. Le chemin
+            //    s'arrête sur le seuil (la case de la porte est libérée plus bas).
+            //  - mode historique (centre) : on exempte la pièce, sinon le centre
+            //    serait inatteignable.
+            if (!$solidEnd && $this->pointInRect($endX, $endY, $rx, $ry, $rw, $rh)) {
                 continue;
             }
 
@@ -103,7 +118,8 @@ class AStarPathfinder
             }
         }
 
-        // Sécurité : les cases de départ/arrivée sont toujours libres
+        // Sécurité : les cases de départ/arrivée sont toujours libres.
+        // En mode porte, c'est exactement ce qui perce le seuil dans le mur.
         $grid[$startY][$startX] = 0;
         $grid[$endY][$endX]     = 0;
 
@@ -192,6 +208,88 @@ class AStarPathfinder
     }
 
     /**
+     * ── NOUVEAU ───────────────────────────────────────────────────────────
+     * Point d'arrivée à viser pour une pièce : sa PORTE si elle en déclare une,
+     * sinon son centre (comportement historique).
+     *
+     * Format attendu dans le JSON de la pièce :
+     *   'door' => ['x' => 64.0, 'y' => 60.0]   // coordonnées absolues en %
+     *
+     * @param  array  $room
+     * @return array  ['x' => float, 'y' => float]
+     */
+    public function targetPoint(array $room): array
+    {
+        $door = $this->doorOf($room);
+
+        return $door ?? $this->roomCenter($room);
+    }
+
+    /**
+     * ── NOUVEAU ───────────────────────────────────────────────────────────
+     * Renvoie la porte d'une pièce si elle est déclarée ET valide, sinon null.
+     */
+    public function doorOf(array $room): ?array
+    {
+        $door = $room['door'] ?? null;
+
+        if (!is_array($door)) {
+            return null;
+        }
+        if (!isset($door['x'], $door['y']) || !is_numeric($door['x']) || !is_numeric($door['y'])) {
+            return null;
+        }
+
+        return [
+            'x' => (float) $door['x'],
+            'y' => (float) $door['y'],
+        ];
+    }
+
+    /**
+     * ── NOUVEAU ───────────────────────────────────────────────────────────
+     * Indique si l'on doit traiter la pièce d'arrivée comme solide
+     * (c'est le cas dès qu'une porte est déclarée).
+     */
+    public function hasDoor(array $room): bool
+    {
+        return $this->doorOf($room) !== null;
+    }
+
+    /**
+     * ── NOUVEAU ───────────────────────────────────────────────────────────
+     * Projette un point sur le bord le plus proche d'une pièce.
+     * Utile côté éditeur : l'admin clique n'importe où, la porte se colle au mur.
+     *
+     * @return array ['x' => float, 'y' => float, 'side' => 'left'|'right'|'top'|'bottom']
+     */
+    public function snapToEdge(array $room, float $x, float $y): array
+    {
+        $rx = (float) $room['x'];
+        $ry = (float) $room['y'];
+        $rw = (float) $room['w'];
+        $rh = (float) $room['h'];
+
+        // Garder le point dans l'emprise de la pièce
+        $cx = max($rx, min($rx + $rw, $x));
+        $cy = max($ry, min($ry + $rh, $y));
+
+        // Distance à chacun des 4 bords
+        $dLeft   = $cx - $rx;
+        $dRight  = ($rx + $rw) - $cx;
+        $dTop    = $cy - $ry;
+        $dBottom = ($ry + $rh) - $cy;
+
+        $min = min($dLeft, $dRight, $dTop, $dBottom);
+
+        if ($min === $dLeft)   return ['x' => $rx,       'y' => $cy, 'side' => 'left'];
+        if ($min === $dRight)  return ['x' => $rx + $rw, 'y' => $cy, 'side' => 'right'];
+        if ($min === $dTop)    return ['x' => $cx, 'y' => $ry,       'side' => 'top'];
+
+        return ['x' => $cx, 'y' => $ry + $rh, 'side' => 'bottom'];
+    }
+
+    /**
      * Localise le connecteur vertical (ascenseur / escalier / palier) le plus
      * pertinent d'un étage.
      *
@@ -247,8 +345,13 @@ class AStarPathfinder
         ];
     }
 
-    private function isOpenZone(string $name): bool
+    /**
+     * Indique si le nom d'une pièce correspond à une zone de circulation
+     * toujours franchissable (couloir, hall, ascenseur, escalier, allée...).
+     */
+    public static function isOpenZone(string $name): bool
     {
+        $name = mb_strtolower($name);
         foreach (self::OPEN_KEYWORDS as $kw) {
             if (str_contains($name, $kw)) return true;
         }
