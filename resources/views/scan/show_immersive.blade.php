@@ -28,7 +28,7 @@
         --open:rgba(22,163,74,.07);--open-stroke:rgba(22,163,74,.4);
         color-scheme:light;
     }
-    html,body{height:100%;overflow:hidden}
+    html,body{height:100%;overflow:hidden;overscroll-behavior:none}
     body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;-webkit-tap-highlight-color:transparent}
 
     .map{position:fixed;inset:0;background:var(--bg2);touch-action:none;cursor:grab}
@@ -67,7 +67,7 @@
     .banner .bx svg{width:20px;height:20px}
 
     /* Bottom sheet */
-    .sheet{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--bg2);border-top:1px solid var(--border);border-radius:22px 22px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.32);transform:translateY(0);transition:transform .28s cubic-bezier(.4,0,.2,1);max-height:82vh;display:flex;flex-direction:column}
+    .sheet{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--bg2);border-top:1px solid var(--border);border-radius:22px 22px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.32);transform:translateY(0);transition:transform .28s cubic-bezier(.4,0,.2,1);max-height:82vh;max-height:82dvh;display:flex;flex-direction:column;touch-action:pan-y}
     .grab{padding:10px 0 4px;display:flex;justify-content:center;cursor:pointer;flex-shrink:0}
     .grab span{width:42px;height:5px;background:var(--bg4);border-radius:3px}
     .sheet-body{padding:6px 18px 22px;overflow-y:auto}
@@ -153,7 +153,7 @@
 </div>
 
 <div class="sheet" id="sheet">
-    <div class="grab" onclick="toggleSheet()"><span></span></div>
+    <div class="grab" id="sheetGrab" onclick="toggleSheet()"><span></span></div>
     <div class="sheet-body" id="sheetBody"></div>
 </div>
 
@@ -201,20 +201,72 @@ function ptInSvg(clientX,clientY){
     const scale=Math.max(1000/r.width,700/r.height);
     return {x:(clientX-r.left)*scale,y:(clientY-r.top)*scale};
 }
-map.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,tx:view.tx,ty:view.ty};map.setPointerCapture(e.pointerId);});
+let inertiaRaf=null, vel={x:0,y:0}, lastMove=null, movedDist=0, lastTapT=0;
+function stopInertia(){ if(inertiaRaf){cancelAnimationFrame(inertiaRaf);inertiaRaf=null;} }
+map.addEventListener('pointerdown',e=>{
+    stopInertia();
+    drag={x:e.clientX,y:e.clientY,tx:view.tx,ty:view.ty};
+    vel={x:0,y:0}; lastMove={x:e.clientX,y:e.clientY,t:performance.now()}; movedDist=0;
+    map.setPointerCapture(e.pointerId);
+});
 map.addEventListener('pointermove',e=>{
     if(!drag||pinch)return;
     const svg=document.getElementById('svg');const r=svg.getBoundingClientRect();
     const scale=Math.max(1000/r.width,700/r.height);
     view.tx=drag.tx+(e.clientX-drag.x)*scale;
     view.ty=drag.ty+(e.clientY-drag.y)*scale;
+    // vélocité (unités svg / ms) pour l'inertie
+    const now=performance.now(), dt=Math.max(1, now-lastMove.t);
+    vel.x=(e.clientX-lastMove.x)*scale/dt;
+    vel.y=(e.clientY-lastMove.y)*scale/dt;
+    movedDist+=Math.hypot(e.clientX-lastMove.x, e.clientY-lastMove.y);
+    lastMove={x:e.clientX,y:e.clientY,t:now};
     applyView();
 });
-map.addEventListener('pointerup',()=>{drag=null;});
+map.addEventListener('pointerup',e=>{
+    drag=null;
+    // double-tap : zoom sur le point touché (si le doigt n'a pas glissé)
+    const now=Date.now();
+    if(movedDist<10){
+        if(now-lastTapT<300){ const p=ptInSvg(e.clientX,e.clientY); zoomAt(p.x,p.y,1.7); lastTapT=0; return; }
+        lastTapT=now;
+    }
+    // inertie : le plan glisse et décélère
+    const speed=Math.hypot(vel.x,vel.y);
+    if(speed>0.08){
+        let vx=vel.x*16, vy=vel.y*16;   // par frame (~16ms)
+        (function glide(){
+            view.tx+=vx; view.ty+=vy;
+            vx*=0.92; vy*=0.92;
+            applyView();
+            if(Math.hypot(vx,vy)>0.4) inertiaRaf=requestAnimationFrame(glide);
+            else inertiaRaf=null;
+        })();
+    }
+});
 map.addEventListener('wheel',e=>{e.preventDefault();const p=ptInSvg(e.clientX,e.clientY);zoomAt(p.x,p.y,e.deltaY<0?1.12:0.89);},{passive:false});
 // pinch
-map.addEventListener('touchstart',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);pinch={d,s:view.s};}},{passive:false});
-map.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){e.preventDefault();const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);const f=d/pinch.d;view.s=Math.max(0.6,Math.min(4,pinch.s*f));applyView();}},{passive:false});
+map.addEventListener('touchstart',e=>{
+    if(e.touches.length===2){
+        stopInertia();
+        const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+        const mid=ptInSvg((e.touches[0].clientX+e.touches[1].clientX)/2,(e.touches[0].clientY+e.touches[1].clientY)/2);
+        pinch={d, s:view.s, tx:view.tx, ty:view.ty, mid};
+    }
+},{passive:false});
+map.addEventListener('touchmove',e=>{
+    if(pinch&&e.touches.length===2){
+        e.preventDefault();
+        const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+        const ns=Math.max(0.6,Math.min(4,pinch.s*(d/pinch.d)));
+        const k=ns/pinch.s;
+        // le point sous les doigts reste sous les doigts
+        view.tx=pinch.mid.x-(pinch.mid.x-pinch.tx)*k;
+        view.ty=pinch.mid.y-(pinch.mid.y-pinch.ty)*k;
+        view.s=ns;
+        applyView();
+    }
+},{passive:false});
 map.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null;});
 
 // ===== État =====
@@ -281,6 +333,24 @@ let sheetMode='list',sheetExpanded=false;
 function openSheet(mode){sheetMode=mode;renderSheet();const sh=document.getElementById('sheet');sh.style.transform='translateY(0)';}
 function toggleSheet(){sheetExpanded=!sheetExpanded;const sh=document.getElementById('sheet');const body=document.getElementById('sheetBody');sh.style.maxHeight=sheetExpanded?'82vh':'46vh';}
 function collapseSheet(){const sh=document.getElementById('sheet');sh.style.transform='translateY(calc(100% - 92px))';}
+// Glissement du volet à la poignée : vers le haut = ouvrir/agrandir, vers le bas = replier
+(function(){
+    const grab=document.getElementById('sheetGrab');
+    const sheet=document.getElementById('sheet');
+    let gy=null;
+    grab.addEventListener('touchstart',e=>{gy=e.touches[0].clientY;},{passive:true});
+    grab.addEventListener('touchend',e=>{
+        if(gy===null)return;
+        const dy=e.changedTouches[0].clientY-gy; gy=null;
+        if(dy>40){ // vers le bas
+            if(sheetExpanded){sheetExpanded=false;sheet.style.maxHeight='46vh';}
+            else collapseSheet();
+        } else if(dy<-40){ // vers le haut
+            sheet.style.transform='translateY(0)';
+            if(!sheetExpanded){sheetExpanded=true;sheet.style.maxHeight='82vh';}
+        }
+    },{passive:true});
+})();
 
 function renderSheet(){
     const body=document.getElementById('sheetBody');

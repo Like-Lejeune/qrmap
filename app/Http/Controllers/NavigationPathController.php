@@ -78,13 +78,16 @@ class NavigationPathController extends Controller
 
         // ── Mono-étage : un seul tronçon ───────────────────────────────────
         if ($sameFloor) {
-            $floor = $qr->floor;
+           $floor = $qr->floor;
             $rooms = $floor->rooms ?? [];
             $from  = ['x' => (float) $qr->pos_x, 'y' => (float) $qr->pos_y];
             $room  = $this->resolveRoom($floor, $dest);
-            $to    = ['x' => $room['cx'] ?? 50, 'y' => $room['cy'] ?? 50];
 
-            $wp = ($saved[0]['waypoints'] ?? null) ?: $astar->find($rooms, $from, $to);
+            // Point d'arrivée : end_point enregistré (porte) > centre de la pièce
+            [$to, $solidEnd] = $this->resolveEndpoint($astar, $saved[0] ?? null, $room);
+
+            // Waypoints figés à la main ? sinon A* recalculé vers $to
+            $wp = ($saved[0]['waypoints'] ?? null) ?: $astar->find($rooms, $from, $to, $solidEnd);
 
             return response()->json([
                 'multi'    => false,
@@ -96,6 +99,7 @@ class NavigationPathController extends Controller
                     'rooms'        => $rooms,
                     'from'         => $from,
                     'to'           => $to,
+                    'end_point'    => $saved[0]['end_point'] ?? null,   // ← AJOUT
                     'waypoints'    => $wp,
                     'smooth'       => (bool) ($saved[0]['smooth'] ?? false),
                     'editable_end' => true,   // destination déplaçable
@@ -113,13 +117,15 @@ class NavigationPathController extends Controller
         $connD = $astar->findConnectorRoom($dr, $near);
 
         $room = $this->resolveRoom($df, $dest);
-        $to   = ['x' => $room['cx'] ?? 50, 'y' => $room['cy'] ?? 50];
+
+        // Tronçon 2 : end_point enregistré (porte) > centre de la pièce
+        [$to, $solidEnd2] = $this->resolveEndpoint($astar, $saved[1] ?? null, $room);
 
         $connCcenter = $connC ? $astar->roomCenter($connC) : ['x' => 50, 'y' => 95];
         $connDcenter = $connD ? $astar->roomCenter($connD) : $connCcenter;
 
         $leg1 = ($saved[0]['waypoints'] ?? null) ?: ($astar->find($cr, $from, $connCcenter) ?: [$from, $connCcenter]);
-        $leg2 = ($saved[1]['waypoints'] ?? null) ?: ($astar->find($dr, $connDcenter, $to) ?: [$connDcenter, $to]);
+        $leg2 = ($saved[1]['waypoints'] ?? null) ?: ($astar->find($dr, $connDcenter, $to, $solidEnd2) ?: [$connDcenter, $to]);
 
         return response()->json([
             'multi'    => true,
@@ -166,17 +172,29 @@ class NavigationPathController extends Controller
             'segments.*.floor_id'       => 'nullable|integer',
             'segments.*.role'           => 'nullable|string|max:32',
             'segments.*.smooth'         => 'boolean',
-            'segments.*.waypoints'      => 'required|array|min:2',
-            'segments.*.waypoints.*.x'  => 'required|numeric',
-            'segments.*.waypoints.*.y'  => 'required|numeric',
-        ]);
 
+            'segments.*.end_point'      => 'nullable|array',
+            'segments.*.end_point.x'    => 'required_with:segments.*.end_point|numeric|min:0|max:100',
+            'segments.*.end_point.y'    => 'required_with:segments.*.end_point|numeric|min:0|max:100',
+
+            'segments.*.waypoints'      => 'nullable|array|min:2',
+            'segments.*.waypoints.*.x'  => 'required_with:segments.*.waypoints|numeric',
+            'segments.*.waypoints.*.y'  => 'required_with:segments.*.waypoints|numeric',
+        ]);
+        foreach ($data['segments'] as $i => $s) {
+                    if (empty($s['waypoints']) && empty($s['end_point'])) {
+                        return response()->json([
+                            'message' => "Le tronçon #{$i} doit avoir un tracé ou un point d'arrivée.",
+                        ], 422);
+                    }
+        }
         $segments = array_map(function ($s) {
             return [
                 'floor_id'  => $s['floor_id'] ?? null,
                 'role'      => $s['role'] ?? 'direct',
                 'smooth'    => (bool) ($s['smooth'] ?? false),
-                'waypoints' => $s['waypoints'],
+                'end_point' => $s['end_point'] ?? null,     // ← porte (ou null)
+                'waypoints' => $s['waypoints'] ?? null,     // ← peut être null
             ];
         }, $data['segments']);
 
@@ -189,6 +207,7 @@ class NavigationPathController extends Controller
                 // Compat mono-étage : 1er tronçon dans waypoints/smooth
                 'waypoints' => $first['waypoints'],
                 'smooth'    => $first['smooth'],
+                'end_point' => $first['end_point'],   // ← porte du 1er tronçon
                 // Multi-étage : tableau complet (sinon null)
                 'segments'  => $isMulti ? $segments : null,
             ]
@@ -231,5 +250,23 @@ class NavigationPathController extends Controller
             }
         }
         return ['cx' => 50, 'cy' => 50];
+    }
+    /**
+     * Détermine le point d'arrivée d'un tronçon.
+     * Priorité : end_point enregistré (porte) > centre de la pièce.
+     *
+     * @return array{0: array{x: float, y: float}, 1: bool}  [$to, $solidEnd]
+     */
+    private function resolveEndpoint(AStarPathfinder $astar, ?array $savedSeg, array $room): array
+    {
+        $ep = $savedSeg['end_point'] ?? null;
+
+        if (is_array($ep) && isset($ep['x'], $ep['y']) && is_numeric($ep['x']) && is_numeric($ep['y'])) {
+            // Porte enregistrée → l'A* vise ce point, la pièce reste solide
+            return [['x' => (float) $ep['x'], 'y' => (float) $ep['y']], true];
+        }
+
+        // Sinon : centre de la pièce (comportement historique)
+        return [['x' => $room['cx'] ?? 50, 'y' => $room['cy'] ?? 50], false];
     }
 }

@@ -42,6 +42,10 @@
         --conn:rgba(217,119,6,.10);--conn-stroke:rgba(217,119,6,.55);
         color-scheme:light;
     }
+    .moon{display:block}.sun{display:none}
+    html[data-theme="light"] .moon{display:none}
+    html[data-theme="light"] .sun{display:block}
+    #themeBtn svg{width:16px;height:16px}
     body{background:var(--bg);color:var(--text);font-family:var(--body);height:100vh;overflow:hidden;font-size:14px}
 
     .app{display:grid;grid-template-columns:300px 1fr 320px;grid-template-rows:56px 1fr;height:100vh}
@@ -154,7 +158,8 @@
         <div class="top-actions">
             <a class="btn" href="{{ route('plan-editor.index') }}" style="text-decoration:none">← Plans</a>
             <button class="btn icon" id="themeBtn" title="Thème clair/sombre">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg>
             </button>
             <button class="btn" id="importBtn">Importer JSON</button>
             <button class="btn" id="exportBtn">Exporter</button>
@@ -323,10 +328,26 @@
 
 <div class="toast" id="toast"></div>
 
+@include('partials.room-types')
+
 <script>
-const VW=900,VH=600;
+// VW/VH ne sont plus fixes : ils reflètent le RATIO réel largeur/profondeur
+// du bâtiment (width_m / depth_m), pour que les pièces gardent des proportions
+// fidèles quel que soit la forme du site (carré, tout en longueur, etc.).
+// Les coordonnées restent en % (0-100) : seul le cadre d'affichage s'adapte.
+const BASE=900;      // taille de référence du plus grand côté, en pixels d'écran
+const MIN_SIDE=420;  // évite un cadre trop écrasé sur un bâtiment très allongé
+let VW=900,VH=600;
 const pxX=p=>(p/100)*VW,pxY=p=>(p/100)*VH;
 const pcX=x=>(x/VW)*100,pcY=y=>(y/VH)*100;
+
+function updateViewBox(){
+    const w=Math.max(1,+state.building.width_m||40);
+    const d=Math.max(1,+state.building.depth_m||25);
+    if(w>=d){ VW=BASE; VH=Math.max(MIN_SIDE,Math.round(BASE*d/w)); }
+    else    { VH=BASE; VW=Math.max(MIN_SIDE,Math.round(BASE*w/d)); }
+    $('#svg').setAttribute('viewBox',`0 0 ${VW} ${VH}`);
+}
 
 let state={
     site:{name:'',address:'',latitude:'',longitude:'',description:''},
@@ -393,6 +414,23 @@ function drawRoom(r){
     g.dataset.id=r._id;
     const x=pxX(r.x),y=pxY(r.y),w=pxX(r.w),h=pxY(r.h);
     roomBodyEl(r,x,y,w,h,g);
+    // ── Décor : teinte + icône selon le type de pièce (visuel uniquement) ──
+    const kind = (typeof roomKind==='function') ? roomKind(r) : null;
+    if(kind){
+        if(kind.tint && kind.tint!=='transparent'){
+            // calque de teinte par-dessus le corps de la pièce
+            roomBodyEl(r,x,y,w,h,g).setAttribute('fill',kind.tint);
+            g.lastChild.setAttribute('stroke','none');
+            g.lastChild.setAttribute('pointer-events','none');
+        }
+        // icône en filigrane, centrée, taille proportionnelle à la pièce
+        const isz=Math.max(14,Math.min(34,Math.min(w,h)*0.4));
+        if(w>34 && h>28){
+            const ic=add('g',{class:'room-ic','pointer-events':'none',
+                transform:`translate(${x+w/2-isz/2} ${y+h/2-isz/2}) scale(${isz/24})`},g);
+            ic.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">${kind.icon}</svg>`;
+        }
+    }
     const nm=r.name||'';
     if(nm){
         const fs=Math.max(9,Math.min(15,w/6));
@@ -721,7 +759,16 @@ const bind=(id,obj,key,num)=>{$('#'+id).addEventListener('input',()=>{obj[key]=n
 bind('siteName',state.site,'name');bind('siteAddr',state.site,'address');
 bind('siteLat',state.site,'latitude');bind('siteLng',state.site,'longitude');bind('siteDesc',state.site,'description');
 bind('bldName',state.building,'name');
-bind('bldW',state.building,'width_m',1);bind('bldD',state.building,'depth_m',1);bind('bldH',state.building,'floor_height_m',1);
+bind('bldH',state.building,'floor_height_m',1);
+// Largeur/Profondeur : en plus de mettre à jour l'état, on adapte le cadre
+// d'affichage à la vraie forme du bâtiment et on redessine.
+['bldW','bldD'].forEach(id=>{
+    $('#'+id).addEventListener('input',()=>{
+        const key=id==='bldW'?'width_m':'depth_m';
+        state.building[key]=+$('#'+id).value||(key==='width_m'?40:25);
+        updateViewBox();render();
+    });
+});
 
 function pushSiteToInputs(){
     $('#siteName').value=state.site.name;$('#siteAddr').value=state.site.address;
@@ -732,8 +779,13 @@ function pushSiteToInputs(){
 
 $('#themeBtn').onclick=()=>{
     const cur=document.documentElement.getAttribute('data-theme')==='light'?'light':'dark';
-    document.documentElement.setAttribute('data-theme',cur==='light'?'dark':'light');render();
+    const next=cur==='light'?'dark':'light';
+    document.documentElement.setAttribute('data-theme',next);
+    try{localStorage.setItem('qrmap-theme',next);}catch(e){}
+    render();
 };
+// Restaurer le thème choisi (partagé avec les autres vues via 'qrmap-theme')
+(function(){let t='dark';try{t=localStorage.getItem('qrmap-theme')||'dark';}catch(e){}document.documentElement.setAttribute('data-theme',t);})();
 
 function buildJSON(){
     return {
@@ -824,7 +876,7 @@ function loadFrom(data){
         return {_id:uid(),db_id:q.db_id||null,floorIndex:fi<0?0:fi,label:q.label,pos_x:q.pos_x,pos_y:q.pos_y};
     });
     activeFloor=0;sel=null;
-    pushSiteToInputs();renderFloors();updateFloorPill();render();
+    pushSiteToInputs();updateViewBox();renderFloors();updateFloorPill();render();
 }
 
 // ===== Sauvegarde serveur =====
@@ -875,7 +927,7 @@ if(window.__INITIAL__){
     try{ loadFrom(window.__INITIAL__); }catch(e){ console.error(e); }
 }
 
-renderFloors();updateFloorPill();render();syncProps();
+updateViewBox();renderFloors();updateFloorPill();render();syncProps();
 </script>
 </body>
 </html>

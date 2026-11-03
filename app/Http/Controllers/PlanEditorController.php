@@ -371,73 +371,126 @@ class PlanEditorController extends Controller
      * suppression des anciens étages, puis réaffectés au nouvel étage.
      * Les QR retirés côté éditeur (et ceux sans db_id) sont supprimés avec leurs scans.
      */
-    private function syncFloorsAndContent($building, array $data, QrCodeService $service, bool $isCreate): array
+       private function syncFloorsAndContent($building, array $data, QrCodeService $service, bool $isCreate): array
     {
-        // QR existants à conserver (db_id transmis par l'éditeur)
-        $keepQrIds = collect($data['qrcodes'] ?? [])
-            ->pluck('db_id')->filter()->all();
-
-        if (!$isCreate) {
-            $floorIds = $building->floors->pluck('id');
-
-            // 1) Détacher les QR à conserver (floor_id = null) pour lever la contrainte FK
-            if (!empty($keepQrIds)) {
-                QrCode::whereIn('id', $keepQrIds)->update(['floor_id' => null]);
-            }
-
-            // 2) Supprimer les QR retirés / sans db_id (+ leurs logs de scan)
-            $toDelete = QrCode::whereIn('floor_id', $floorIds)
-                ->when(!empty($keepQrIds), fn($q) => $q->whereNotIn('id', $keepQrIds))
-                ->pluck('id');
-
-            if ($toDelete->isNotEmpty()) {
-                if (class_exists(\App\Models\ScanLog::class)) {
-                    \App\Models\ScanLog::whereIn('qr_code_id', $toDelete)->delete();
-                }
-                QrCode::whereIn('id', $toDelete)->delete();
-            }
-
-            // 3) Réécrire étages + destinations à neuf
-            foreach ($building->floors as $f) {
-                $f->destinations()->delete();
-            }
-            $building->floors()->delete();
-            $building->load('floors');
-        }
-
-        // (Re)crée les étages, indexés par niveau
+        // ── 1. Étages : mise à jour en place, indexés par niveau ───────────
         $floorsByLevel = [];
+        $keptFloorIds  = [];
+ 
         foreach ($data['floors'] as $f) {
-            $floor = $building->floors()->create([
-                'level' => $f['level'],
-                'label' => $f['label'] ?? ('Niveau ' . $f['level']),
-                'rooms' => $f['rooms'] ?? [],   // conserve shape/points
-            ]);
-            $floorsByLevel[$f['level']] = $floor;
+            $level = (int) $f['level'];
+ 
+            // updateOrCreate : conserve l'ID si l'étage existe déjà
+            $floor = $building->floors()->updateOrCreate(
+                ['level' => $level],
+                [
+                    'label' => $f['label'] ?? ('Niveau ' . $level),
+                    'rooms' => $f['rooms'] ?? [],   // conserve shape/points/door
+                ]
+            );
+ 
+            $floorsByLevel[$level] = $floor;
+            $keptFloorIds[]        = $floor->id;
         }
-
-        // Destinations
+ 
+        // ── 2. Étages supprimés côté éditeur ──────────────────────────────
+        if (!$isCreate) {
+            $staleFloors = $building->floors()
+                ->whereNotIn('id', $keptFloorIds)
+                ->get();
+ 
+            foreach ($staleFloors as $stale) {
+                // Les QR de cet étage disparaissent avec lui
+                $qrIds = QrCode::where('floor_id', $stale->id)->pluck('id');
+                if ($qrIds->isNotEmpty()) {
+                    if (class_exists(\App\Models\ScanLog::class)) {
+                        \App\Models\ScanLog::whereIn('qr_code_id', $qrIds)->delete();
+                    }
+                    QrCode::whereIn('id', $qrIds)->delete();
+                }
+                $stale->destinations()->delete();
+                $stale->delete();
+            }
+        }
+ 
+        $building->load('floors');
+ 
+        // ── 3. Destinations : mise à jour en place (IDs préservés) ─────────
+        $keptDestIds = [];
+ 
         foreach ($data['destinations'] ?? [] as $d) {
             $floor = $floorsByLevel[$d['floor_level']] ?? null;
             if (!$floor) continue;
-            $floor->destinations()->create([
+ 
+            $attrs = [
                 'room_id'     => $d['room_id'] ?? null,
                 'label'       => $d['label'],
                 'category'    => $d['category'] ?? 'service',
                 'description' => $d['description'] ?? null,
                 'sort_order'  => $d['sort_order'] ?? 0,
                 'is_active'   => $d['is_active'] ?? true,
-            ]);
+            ];
+ 
+            $existing = null;
+ 
+            // a) L'éditeur transmet l'ID en base : correspondance certaine
+            if (!empty($d['db_id'])) {
+                $existing = Destination::where('id', $d['db_id'])
+                    ->where('floor_id', $floor->id)
+                    ->first();
+            }
+ 
+            // b) Repli : clé métier stable (étage + pièce visée)
+            if (!$existing && !empty($d['room_id'])) {
+                $existing = $floor->destinations()
+                    ->where('room_id', $d['room_id'])
+                    ->whereNotIn('id', $keptDestIds ?: [0])
+                    ->first();
+            }
+ 
+            if ($existing) {
+                $existing->update($attrs);   // ← l'ID ne change PAS
+                $dest = $existing;
+            } else {
+                $dest = $floor->destinations()->create($attrs);
+            }
+ 
+            $keptDestIds[] = $dest->id;
         }
-
-        // QR codes : réaffecter les existants, générer les nouveaux
+ 
+        // ── 4. Destinations retirées côté éditeur ─────────────────────────
+        // (leurs NavigationPath tombent en cascade, ce qui est voulu ici :
+        //  la destination n'existe plus)
+        if (!$isCreate) {
+            Destination::whereIn('floor_id', $keptFloorIds)
+                ->when(!empty($keptDestIds), fn($q) => $q->whereNotIn('id', $keptDestIds))
+                ->delete();
+        }
+ 
+        // ── 5. QR codes : réaffecter les existants, générer les nouveaux ───
+        $keepQrIds = collect($data['qrcodes'] ?? [])->pluck('db_id')->filter()->all();
+ 
+        if (!$isCreate) {
+            // Supprimer les QR retirés côté éditeur (+ leurs logs de scan)
+            $toDelete = QrCode::whereIn('floor_id', $keptFloorIds)
+                ->when(!empty($keepQrIds), fn($q) => $q->whereNotIn('id', $keepQrIds))
+                ->pluck('id');
+ 
+            if ($toDelete->isNotEmpty()) {
+                if (class_exists(\App\Models\ScanLog::class)) {
+                    \App\Models\ScanLog::whereIn('qr_code_id', $toDelete)->delete();
+                }
+                QrCode::whereIn('id', $toDelete)->delete();
+            }
+        }
+ 
         $out = [];
         foreach ($data['qrcodes'] ?? [] as $q) {
             $floor = $floorsByLevel[$q['floor_level']] ?? null;
             if (!$floor) continue;
-
+ 
             $existing = !empty($q['db_id']) ? QrCode::find($q['db_id']) : null;
-
+ 
             if ($existing) {
                 $existing->update([
                     'floor_id'       => $floor->id,
@@ -457,7 +510,7 @@ class PlanEditorController extends Controller
                 ]);
                 $qr = $res['qr_code'];
             }
-
+ 
             $out[] = [
                 'id'          => $qr->id,
                 'uuid'        => $qr->uuid,
@@ -465,7 +518,7 @@ class PlanEditorController extends Controller
                 'label'       => $q['label'],
             ];
         }
-
+ 
         return $out;
     }
 
@@ -564,6 +617,7 @@ class PlanEditorController extends Controller
             'building'                => 'required|array',
             'building.name'           => 'required|string|max:255',
             'building.model_3d'       => 'nullable|array',
+            
 
             'floors'                  => 'required|array|min:1',
             'floors.*.level'          => 'required|integer',
@@ -578,8 +632,15 @@ class PlanEditorController extends Controller
             'floors.*.rooms.*.shape'    => 'nullable|in:rect,circle,poly',
             'floors.*.rooms.*.points'   => 'nullable|array',
             'floors.*.rooms.*.points.*' => 'array',
+            
+
+            // Porte d'une pièce (optionnelle) — coordonnées en %
+            'floors.*.rooms.*.door'   => 'nullable|array',
+            'floors.*.rooms.*.door.x' => 'nullable|numeric|min:0|max:100',
+            'floors.*.rooms.*.door.y' => 'nullable|numeric|min:0|max:100',
 
             'destinations'            => 'array',
+            'destinations.*.db_id'   => 'nullable|integer',
             'destinations.*.floor_level' => 'required|integer',
             'destinations.*.room_id'  => 'nullable|string|max:64',
             'destinations.*.label'    => 'required|string|max:255',

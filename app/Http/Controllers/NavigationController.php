@@ -103,22 +103,37 @@ class NavigationController extends Controller
 
         $from = ['x' => (float) $qr->pos_x, 'y' => (float) $qr->pos_y];
 
-        $destRoom = $dest->getRoom();
-        $to = $destRoom
-            ? ['x' => $destRoom['x'] + $destRoom['w'] / 2, 'y' => $destRoom['y'] + $destRoom['h'] / 2]
-            : ['x' => 50, 'y' => 50];
+      $destRoom = $dest->getRoom();
 
-        // HOOK : tracé corrigé par l'admin prioritaire sur l'A*
+        // Override enregistré par l'admin (tracé complet et/ou point de porte)
         $override = NavigationPath::where('qr_code_id', $qr->id)
             ->where('destination_id', $dest->id)
             ->first();
 
-        if ($override) {
-            $path   = $override->waypoints;   // [{x,y}, ...] corrigé à la main
-            $smooth = $override->smooth;
+        // ── Point d'arrivée : porte enregistrée > porte du plan > centre ───
+        if ($override && $override->hasEndPoint()) {
+            $to       = ['x' => (float) $override->end_point['x'], 'y' => (float) $override->end_point['y']];
+            $solidEnd = true;
+        } elseif ($destRoom && $finder->hasDoor($destRoom)) {
+            $to       = $finder->targetPoint($destRoom);   // porte déclarée dans le plan
+            $solidEnd = true;
+        } elseif ($destRoom) {
+            $to       = $finder->roomCenter($destRoom);     // centre (historique)
+            $solidEnd = false;
         } else {
-            $path   = $finder->find($rooms, $from, $to) ?? [$from, $to];
-            $smooth = false;
+            $to       = ['x' => 50, 'y' => 50];
+            $solidEnd = false;
+        }
+
+        // ── Chemin ─────────────────────────────────────────────────────────
+        // 1. tracé manuel complet enregistré → servi tel quel
+        // 2. sinon A* (re)calculé vers $to (porte ou centre)
+        if ($override && !empty($override->waypoints)) {
+            $path   = $override->waypoints;
+            $smooth = (bool) $override->smooth;
+        } else {
+            $path   = $finder->find($rooms, $from, $to, $solidEnd) ?? [$from, $to];
+            $smooth = (bool) ($override->smooth ?? false);
         }
 
         return [
@@ -164,11 +179,23 @@ class NavigationController extends Controller
         $near = $connCurrent ? $finder->roomCenter($connCurrent) : null;
         $connDest = $finder->findConnectorRoom($destRooms, $near);
 
-        // Point d'arrivée final (centre de la pièce destination)
+        // Point d'arrivée final : end_point enregistré > porte du plan > centre.
         $destRoom = $dest->getRoom();
-        $to = $destRoom
-            ? ['x' => $destRoom['x'] + $destRoom['w'] / 2, 'y' => $destRoom['y'] + $destRoom['h'] / 2]
-            : ['x' => 50, 'y' => 50];
+
+        $override = NavigationPath::where('qr_code_id', $qr->id)
+            ->where('destination_id', $dest->id)
+            ->first();
+
+        if ($override && $override->hasEndPoint()) {
+            $to       = ['x' => (float) $override->end_point['x'], 'y' => (float) $override->end_point['y']];
+            $solidEnd = true;
+        } elseif ($destRoom) {
+            $to       = $finder->targetPoint($destRoom);
+            $solidEnd = $finder->hasDoor($destRoom);
+        } else {
+            $to       = ['x' => 50, 'y' => 50];
+            $solidEnd = false;
+        }
 
         // ── Tronçon 1 : départ → connecteur (étage courant) ────────────────
         if ($connCurrent) {
@@ -182,7 +209,7 @@ class NavigationController extends Controller
 
         // ── Tronçon 2 : connecteur → destination (étage d'arrivée) ─────────
         $connDestCenter = $connDest ? $finder->roomCenter($connDest) : $connCurrentCenter;
-        $leg2 = $finder->find($destRooms, $connDestCenter, $to) ?? [$connDestCenter, $to];
+        $leg2 = $finder->find($destRooms, $connDestCenter, $to, $solidEnd) ?? [$connDestCenter, $to];
 
         // ── Instruction texte ──────────────────────────────────────────────
         $levelDiff = $destFloor->level - $currentFloor->level;
