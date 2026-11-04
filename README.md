@@ -1,215 +1,150 @@
-# QRMap — Cartographie de bâtiments par QR Code
-## Guide d'installation complet
+# QRMap — GPS stops at the door. QRMap starts there.
+
+**Indoor navigation from a QR code, with an AI guide powered by Meta Muse Spark.**
+Built in Yaoundé, Cameroon · Meta Global AI Developer Hackathon 2026 · Startup track · Theme: *Build for Your World*
+
+🎥 Demo video: `<link>` · 🌐 [qrmap.app](https://qrmap.app)
 
 ---
 
-## Prérequis
-- PHP 8.1+
-- Composer
-- Laravel 10 ou 11
-- MySQL / PostgreSQL / SQLite
-- Extension PHP GD (pour la génération des QR codes)
+## The problem
+
+In Cameroon, hospitals, ministries, markets and trade fairs rarely have indoor signage visitors can trust. People ask around, wander and lose time — sometimes when it matters most, like in a hospital.
+
+Classic indoor navigation needs beacons, a dedicated app and weeks of mapping. That does not scale to the buildings people actually use here.
+
+QRMap needs only a QR code on a wall and a phone browser: **no app, no sign-up, no hardware.**
 
 ---
 
-## Installation pas à pas
+## What QRMap does
 
-### 1. Créer le projet Laravel
-```bash
-composer create-project laravel/laravel qrmap
-cd qrmap
-```
-
-### 2. Installer les dépendances
-```bash
-# Générateur de QR codes
-composer require simplesoftwareio/simple-qrcode
-
-# Vérifier que l'extension GD est activée
-php -m | grep gd
-```
-
-### 3. Configurer la base de données
-```env
-# .env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=qrmap
-DB_USERNAME=root
-DB_PASSWORD=
-
-APP_URL=http://localhost:8000
-```
-
-### 4. Créer les fichiers
-
-Copiez tous les fichiers fournis dans les bons dossiers :
-
-```
-app/
-├── Http/Controllers/
-│   ├── DashboardController.php
-│   ├── SiteController.php
-│   ├── BuildingController.php
-│   ├── FloorController.php
-│   ├── QrCodeController.php
-│   ├── ScanController.php
-│   └── Api/
-│       └── BuildingApiController.php
-├── Models/
-│   ├── Site.php
-│   ├── Building.php
-│   ├── Floor.php
-│   └── QrCode.php
-└── Services/
-    └── QrCodeService.php
-
-resources/views/
-├── layouts/app.blade.php
-├── dashboard.blade.php
-├── sites/
-│   ├── index.blade.php
-│   ├── show.blade.php
-│   └── form.blade.php
-├── buildings/
-│   ├── show.blade.php
-│   └── form.blade.php
-├── floors/
-│   └── form.blade.php
-├── qrcodes/
-│   ├── index.blade.php
-│   ├── create.blade.php
-│   └── show.blade.php
-└── scan/
-    └── show.blade.php
-
-routes/
-├── web.php
-└── api.php
-```
-
-### 5. Créer les migrations
-
-```bash
-php artisan make:migration create_sites_table
-php artisan make:migration create_buildings_table
-php artisan make:migration create_floors_table
-php artisan make:migration create_qr_codes_table
-```
-Copiez le contenu des migrations depuis `routes_and_migrations.php`
-
-### 6. Lancer les migrations
-```bash
-php artisan migrate
-```
-
-### 7. Créer le lien storage
-```bash
-php artisan storage:link
-```
-
-### 8. Enregistrer le service QrCodeService dans AppServiceProvider
-```php
-// app/Providers/AppServiceProvider.php
-public function register(): void
-{
-    $app->bind(\App\Services\QrCodeService::class);
-}
-```
-
-### 9. Lancer le serveur
-```bash
-php artisan serve
-# Ouvrez : http://localhost:8000
-```
+1. A visitor scans a QR code at the entrance or in a corridor.
+2. The browser opens the building's 2D plan, with "You are here".
+3. The visitor picks a destination, **or asks the AI guide in plain language** ("I have chest pain", "where do I pay?").
+4. QRMap computes the route with A\* and guides turn by turn, with voice, across floors.
 
 ---
 
-## Utilisation
+## Before the hackathon vs. built during the hackathon
 
-### Flux de travail complet
+To respect the "new work only" rule, the repository history is split: the first commit is the pre-existing QRMap product, and every later commit was made during the event.
 
-1. **Créer un site** → `/sites/create`
-   - Renseignez le nom, l'adresse, les coordonnées GPS
-
-2. **Ajouter un bâtiment** → Dans la page du site, cliquez "+ Bâtiment"
-   - Définissez les dimensions (largeur, profondeur, hauteur par étage)
-   - Ces dimensions génèrent automatiquement la vue 3D
-
-3. **Configurer les étages** → Dans la page du bâtiment, cliquez "+ Étage"
-   - Dessinez les pièces avec l'éditeur visuel (positions en %)
-   - Ou collez un SVG personnalisé pour un plan précis
-
-4. **Générer les QR Codes** → `/qrcodes/create`
-   - Associez à un site, bâtiment et étage
-   - Définissez la position (X%, Y%) sur le plan
-   - Téléchargez le PNG et imprimez
-
-5. **Tester le scan** → Cliquez "Tester" sur un QR code
-   - Vue plan 2D avec marqueur de votre position
-   - Vue 3D interactive du bâtiment (THREE.js)
-   - Informations complètes du lieu
-
----
-
-## Structure de la page de scan (vue publique)
-
-La page `/scan/{uuid}` est la vue destinée aux utilisateurs finaux (via leur téléphone) :
-
-- **Plan 2D** : plan de l'étage avec votre position marquée en vert
-- **Vue 3D** : rendu THREE.js du bâtiment complet, étage courant mis en valeur
-- **Infos** : adresse, coordonnées GPS, statistiques de fréquentation
-
----
-
-## Données de test rapide (Seeder optionnel)
-
-```php
-// database/seeders/DemoSeeder.php
-use App\Models\Site;
-use App\Models\Building;
-use App\Models\Floor;
-
-$site = Site::create([
-    'name' => 'Campus de démonstration',
-    'address' => 'Yaoundé, Cameroun',
-    'latitude' => 3.8667, 'longitude' => 11.5167,
-]);
-
-$building = $site->buildings()->create([
-    'name' => 'Bâtiment Principal',
-    'floors_count' => 3,
-    'model_3d' => ['width_m' => 40, 'depth_m' => 25, 'floor_height_m' => 3.5],
-]);
-
-$building->floors()->create([
-    'level' => 0, 'label' => 'Rez-de-chaussée',
-    'rooms' => [
-        ['id' => 'R1', 'name' => 'Accueil',   'x' => 5,  'y' => 5,  'w' => 25, 'h' => 40],
-        ['id' => 'R2', 'name' => 'Cafétéria', 'x' => 35, 'y' => 5,  'w' => 30, 'h' => 40],
-        ['id' => 'R3', 'name' => 'Salle A',   'x' => 70, 'y' => 5,  'w' => 25, 'h' => 40],
-        ['id' => 'R4', 'name' => 'Couloir',   'x' => 5,  'y' => 50, 'w' => 90, 'h' => 15],
-        ['id' => 'R5', 'name' => 'Bureaux',   'x' => 5,  'y' => 70, 'w' => 55, 'h' => 25],
-        ['id' => 'R6', 'name' => 'Archives',  'x' => 65, 'y' => 70, 'w' => 30, 'h' => 25],
-    ]
-]);
-```
-
-```bash
-php artisan db:seed --class=DemoSeeder
-```
-
----
-
-## Évolutions possibles
-
-| Fonctionnalité | Description |
+| Existed before (first commit) | Built during the hackathon |
 |---|---|
-| Auth | Ajouter `laravel/breeze` pour protéger l'admin |
-| Import DWG/PDF | Convertir des plans architecturaux en SVG |
-| Modèle glTF | Charger de vrais modèles 3D via URL |
-| Multi-marqueur | Afficher plusieurs QR codes sur le même plan |
-| Historique | Logger chaque scan avec heure et user-agent |
-| PWA | Transformer la page scan en Progressive Web App |
-| Géolocalisation | Comparaison GPS avec la position QR |
+| QR scan → 2D plan in the browser | **AI guide** (Muse Spark, tool calling): free-text or voice questions, any language |
+| A\* routing on the server, turn-by-turn steps | **Plan reading** (Muse Spark, image input + JSON schema output): a photo or PDF of a floor plan becomes rooms, corridors and doors |
+| Plan editor with manual drawing | `RouteDescriber`: turns the A\* path into steps with visible landmarks, for the model to explain |
+| Multi-floor sites, QR code generation | Doors as arrival points (the destination room stays a wall; the route ends at its door) |
+| Laravel 12 · PHP 8.2 or latest· MySQL | Client-side A\* port in JavaScript (identical results to the PHP engine) + cached navigation bundle |
+| | Health-check command `php artisan qrmap:ai-check` |
+
+---
+
+## How Meta's model is used
+
+**Model:** `muse-spark-1.3` through the **Meta Model API** (`https://api.meta.ai/v1/chat/completions`).
+
+| Where | What Muse Spark does | API features used |
+|---|---|---|
+| Visitor scan page — "Ask the guide" (`AiGuideController`, `AiGuide`) | Understands the visitor's need, picks a destination, calls the tool `calculer_itineraire(destination_id)`, then explains the real route with landmarks in the visitor's language | Tool calling, multi-turn conversation, `reasoning_effort: low` |
+| Admin plan editor — "Lire un plan (IA)" (`PlanVisionController`, `PlanVision`) | Reads a photo or PDF of a floor plan and returns rooms, corridors, connectors and doors | Image input, `response_format` JSON schema, `reasoning_effort: medium` |
+
+**Design rule: the model reads and talks, the algorithm computes.**
+
+- The model **never draws a route**. Every route comes from QRMap's A\* engine through the tool call.
+- Every destination ID chosen by the model is **checked on the server**; an invented ID is rejected and the model is asked again.
+- Every plan returned by the model is **revalidated on the server**:
+  - coordinates are clamped;
+  - noise is removed;
+  - doors are snapped to walls;
+  - corridors are named so the router recognises them.
+
+  The admin then reviews the result on top of the original photo.
+- Medical rule in the guide's system prompt: for a medical emergency or a visitor feeling unwell, the guide routes to Emergency (or reception) right away, tells them to alert the nearest staff member, and never gives medical advice.
+
+```
+Visitor ──question──▶ Muse Spark ──tool call──▶ QRMap A* ──real route──▶ Muse Spark ──explanation──▶ Visitor
+Admin   ──photo/PDF─▶ Muse Spark ──JSON plan──▶ server validation ──▶ editor (admin corrects) ──▶ saved plan
+```
+
+---
+
+## Architecture
+
+- **Backend:** Laravel 12, PHP 8.2, MySQL.
+- **Frontend:** Blade views with vanilla JS and SVG. The visitor page works on any phone browser.
+- **Coordinates:** percentages (0–100) of each floor, so the plans don't depend on any building size.
+- **Routing:** A\* on a 100×100 grid, simplified with Douglas–Peucker.
+  - Corridors, halls and waiting areas are walkable.
+  - Rooms are walls except through their door.
+  - Stairs and lifts link floors.
+
+Main AI files:
+
+```
+app/Services/Ai/ModelClient.php        Meta Model API client (retries on 429, Meta-specific parameters)
+app/Services/Ai/AiGuide.php            Tool-calling loop for the visitor guide
+app/Services/Ai/RouteDescriber.php     A* path → steps with landmarks
+app/Services/Ai/PlanVision.php         Plan-reading prompt, JSON schema and server-side normalisation
+app/Http/Controllers/AiGuideController.php
+app/Http/Controllers/PlanVisionController.php
+app/Console/Commands/AiCheck.php       php artisan qrmap:ai-check
+resources/views/partials/guide-ia.blade.php
+```
+
+---
+
+## Run it locally
+
+```bash
+git clone <repo-url> && cd <repo>
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan storage:link
+php artisan serve
+```
+
+Meta Model API settings in `.env`:
+
+```
+AI_PROVIDER=meta
+AI_BASE_URL=https://api.meta.ai/v1
+AI_API_KEY=your_key
+AI_MODEL=muse-spark-1.3
+AI_REASONING_EFFORT=low
+AI_VISION_REASONING_EFFORT=medium
+```
+
+Check the connection:
+
+```bash
+php artisan qrmap:ai-check
+php artisan qrmap:ai-check --image=path/to/floor-plan.jpg
+```
+
+**Demo data.** Import `hopital-demo.json`, a fictional two-floor hospital with 21 destinations and 5 QR codes, from the plan list with "Importer un plan". Then open a QR code's scan page and try:
+
+- "I have chest pain"
+- "My wife is about to give birth"
+- "Where do I pay?"
+
+For plan photos up to a few MB, set `post_max_size = 16M` in `php.ini`.
+
+---
+
+## What's next
+
+- Field deployment in Yaoundé, starting with trade fairs and hospitals.
+- Multi-floor import from a single architect PDF.
+- More local languages for the voice guide.
+- An accessibility mode with step-free routes, preferring lifts over stairs.
+
+---
+
+## Team
+
+QRMap is a four-person team from Yaoundé, Cameroon.
+Contact: contact@qrmap.app · WhatsApp +237 695 249 549

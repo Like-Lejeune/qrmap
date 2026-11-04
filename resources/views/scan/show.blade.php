@@ -97,8 +97,8 @@
     .instr .tx .dist{font-size:13px;color:var(--accent-strong);margin-top:7px;display:inline-flex;align-items:center;gap:5px;font-weight:600}
 
     .planbox{margin:16px 18px 0;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--bg3);position:relative}
-    .planbox svg{width:100%;height:auto;display:block;touch-action:none;cursor:grab}
-    .planbox svg:active{cursor:grabbing}
+    .planbox > svg{width:100%;height:auto;display:block;touch-action:none;cursor:grab}
+    .planbox > svg:active{cursor:grabbing}
     .plan-reset{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:10px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:2}
     .plan-reset.show{display:flex}
     .plan-reset svg{width:16px;height:16px;touch-action:auto;cursor:pointer}
@@ -348,6 +348,7 @@ function roundDist(m){return Math.max(5,Math.round(m/5)*5);}
 const TURN_MIN_ANGLE = 35;   // degrés : en-dessous, ce n'est pas un vrai virage
 const SIMPLIFY_EPS   = 1.2;  // % : tolérance de simplification du tracé (Douglas-Peucker)
 const MIN_STRAIGHT_M = 4;    // mètres : une ligne droite plus courte est fusionnée avec le virage
+const JOG_M          = 8;    // mètres : deux virages opposés plus rapprochés = simple décalage
 
 // Simplification Douglas-Peucker : élimine les micro-zigzags de la grille A*
 function perpDist(p,a,b){
@@ -379,25 +380,33 @@ function buildSteps(data){
         const pts=simplifyPath((seg.path||[]).map(p=>({x:+p.x,y:+p.y})), SIMPLIFY_EPS);
         const fid=seg.floor_id;
         if(pts.length>=2){
-            let accum=0,startPt=pts[0];
-            for(let i=1;i<pts.length;i++){
-                accum+=metersBetween(pts[i-1],pts[i]);
-                const next=pts[i+1];
-                if(next){
-                    const ang=turnAngle(pts[i-1],pts[i],next);
-                    if(Math.abs(ang)>TURN_MIN_ANGLE){
-                        // une ligne droite trop courte est fusionnée avec le virage
-                        if(accum>=MIN_STRAIGHT_M){
-                            steps.push({type:'straight',dist:accum,floorId:fid,at:pts[i],from:startPt,path:pts});
-                        }
-                        steps.push({type:ang>0?'right':'left',floorId:fid,at:pts[i],from:pts[i],path:pts});
-                        accum=0;startPt=pts[i];
-                    }
-                }
+            // Distance cumulée le long du tracé
+            const cum=[0];
+            for(let i=1;i<pts.length;i++)cum[i]=cum[i-1]+metersBetween(pts[i-1],pts[i]);
+            // Virages significatifs
+            let corners=[];
+            for(let i=1;i<pts.length-1;i++){
+                const ang=turnAngle(pts[i-1],pts[i],pts[i+1]);
+                if(Math.abs(ang)>TURN_MIN_ANGLE)corners.push({i,dir:ang>0?'right':'left'});
             }
-            if(accum>=2){
-                steps.push({type:'straight',dist:accum,floorId:fid,at:pts[pts.length-1],from:startPt,path:pts,lastOfSeg:true});
+            // Décalages : deux virages opposés à moins de JOG_M = on contourne un
+            // obstacle, pas un changement de direction. Même règle que RouteDescriber
+            // (texte du guide IA) pour que la voix et l'écran racontent la même chose.
+            for(let k=0;k<corners.length-1;){
+                const a=corners[k],b=corners[k+1];
+                if(a.dir!==b.dir&&cum[b.i]-cum[a.i]<JOG_M){corners.splice(k,2);k=Math.max(0,k-1);}
+                else k++;
             }
+            let prev=0;
+            corners.forEach(c=>{
+                const d=cum[c.i]-cum[prev];
+                // une ligne droite trop courte est fusionnée avec le virage
+                if(d>=MIN_STRAIGHT_M)steps.push({type:'straight',dist:d,floorId:fid,at:pts[c.i],from:pts[prev],path:pts});
+                steps.push({type:c.dir,floorId:fid,at:pts[c.i],from:pts[c.i],path:pts});
+                prev=c.i;
+            });
+            const rest=cum[pts.length-1]-cum[prev];
+            if(rest>=2)steps.push({type:'straight',dist:rest,floorId:fid,at:pts[pts.length-1],from:pts[prev],path:pts,lastOfSeg:true});
         }
         if(seg.role==='vers_connecteur'){
             const cname=(seg.connector&&seg.connector.name)?seg.connector.name:'ascenseur / escalier';

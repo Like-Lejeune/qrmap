@@ -95,7 +95,9 @@
             });
             const data=await res.json().catch(()=>({}));
             wait.remove();
-            const reply=data.reply||"Désolé, je n'ai pas compris. Pouvez-vous reformuler ?";
+            // Le modèle écrit parfois du Markdown (**gras**, # titres) : on l'enlève pour l'affichage et la voix
+            const reply=String(data.reply||"Désolé, je n'ai pas compris. Pouvez-vous reformuler ?")
+                .replace(/\*\*(.+?)\*\*/g,'$1').replace(/^#{1,6}\s*/gm,'');
             bubble('a',reply);
             history.push({role:'assistant',content:reply});
             if(typeof voiceOn!=='undefined' && voiceOn && typeof speak==='function') speak(reply);

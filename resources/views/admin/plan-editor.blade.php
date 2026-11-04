@@ -477,11 +477,7 @@ function drawRoom(r){
         if(w>34 && h>28){
             const ic=add('g',{class:'room-ic','pointer-events':'none',
                 transform:`translate(${x+w/2-isz/2} ${y+h/2-isz/2}) scale(${isz/24})`},g);
-<<<<<<< Updated upstream
-            ic.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">${kind.icon}</svg>`;
-=======
             ic.innerHTML=`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">${kind.icon}</svg>`;
->>>>>>> Stashed changes
         }
     }
     const nm=r.name||'';
