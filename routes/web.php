@@ -16,6 +16,7 @@ use App\Http\Controllers\StatsController;
 use App\Http\Controllers\PlanEditorController;
 use App\Http\Controllers\NavigationPathController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PlanVisionController;
  
 
 // ── PUBLIC ───────────────────────────────
@@ -27,6 +28,9 @@ Route::get('/pitch', function () {
 //Route::get('/', fn() => view('launch', ['demoUrl' => route('demo')]));
 Route::get('/demo', fn() => view('demo'))->name('demo');
 
+Route::post('/plan-editor/vision', [PlanVisionController::class, 'extract'])
+    ->middleware('throttle:10,1')
+    ->name('plan-editor.vision');
 // ── AUTHENTIFICATION ──────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
