@@ -7,7 +7,11 @@ use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\Api\BuildingApiController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
- 
+use App\Http\Controllers\AiGuideController;
+
+
+Route::post('/v1/scan/{uuid}/guide', [AiGuideController::class, 'chat'])
+    ->middleware('throttle:20,1');
 Route::prefix('v1')->group(function () {
  
     // Chargement dynamique des selects (admin)
