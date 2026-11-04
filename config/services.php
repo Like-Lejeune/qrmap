@@ -34,11 +34,13 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-    'acemomo' => [
-        'base_url' => env('MOMO_BASE_URL'),
-        'user' => env('MOMO_USERNAME'),
-        'api_key' => env('MOMO_API_KEY'),
-        'subscription_key' => env('MOMO_SUBSCRIPTION_KEY'),
+    'ai' => [
+        'provider'                => env('AI_PROVIDER', 'meta'),
+        'base_url'                => env('AI_BASE_URL', 'https://api.meta.ai/v1'),
+        'api_key'                 => env('AI_API_KEY'),
+        'model'                   => env('AI_MODEL', 'muse-spark-1.3'),
+        'reasoning_effort'        => env('AI_REASONING_EFFORT', 'low'),
+        'vision_reasoning_effort' => env('AI_VISION_REASONING_EFFORT', 'medium'),
+        'timeout'                 => env('AI_TIMEOUT', 45),
     ],
-
 ];
