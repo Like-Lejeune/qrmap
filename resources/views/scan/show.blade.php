@@ -28,8 +28,9 @@
         --open:rgba(22,163,74,.07);--open-stroke:rgba(22,163,74,.4);
         color-scheme:light;
     }
-    body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;font-size:15px;-webkit-tap-highlight-color:transparent}
-    .wrap{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+    html,body{overscroll-behavior-y:contain}
+    body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;min-height:100dvh;font-size:15px;-webkit-tap-highlight-color:transparent}
+    .wrap{max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 
     /* Header */
     .hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg2)}
@@ -71,11 +72,17 @@
 
     /* ===== B : NAVIGATION (turn-by-turn) ===== */
     .nav{flex:1;display:none;flex-direction:column}
-    .nav.show{display:flex}
+    .nav.show{display:flex;animation:screenIn .28s cubic-bezier(.16,1,.3,1)}
+    @keyframes screenIn{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:none}}
+    .home{animation:homeIn .25s ease}
+    @keyframes homeIn{from{opacity:0}to{opacity:1}}
+    .instr.anim{animation:stepIn .22s cubic-bezier(.16,1,.3,1)}
+    @keyframes stepIn{from{opacity:.4;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
     .navtop{padding:14px 18px 0}
     .navtop-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
     .navtop-row .x{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer}
     .navtop-row .x svg{width:17px;height:17px}
+    .navtop-row .vbtn.on{border-color:var(--accent);color:var(--accent-strong);background:var(--accent-soft)}
     .navtop-row .to{flex:1;text-align:center;font-size:14px;color:var(--muted)}
     .navtop-row .to b{color:var(--text);font-weight:600}
     .prog{display:flex;gap:5px;margin-bottom:16px}
@@ -89,8 +96,12 @@
     .instr .tx .d{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
     .instr .tx .dist{font-size:13px;color:var(--accent-strong);margin-top:7px;display:inline-flex;align-items:center;gap:5px;font-weight:600}
 
-    .planbox{margin:16px 18px 0;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--bg3)}
-    .planbox svg{width:100%;height:auto;display:block}
+    .planbox{margin:16px 18px 0;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--bg3);position:relative}
+    .planbox svg{width:100%;height:auto;display:block;touch-action:none;cursor:grab}
+    .planbox svg:active{cursor:grabbing}
+    .plan-reset{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:10px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:2}
+    .plan-reset.show{display:flex}
+    .plan-reset svg{width:16px;height:16px;touch-action:auto;cursor:pointer}
     .floorbadge{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;font-size:12px;color:var(--muted);border-top:1px solid var(--border)}
     .floorbadge b{color:var(--accent-strong)}
 
@@ -144,7 +155,12 @@
             <div class="navtop-row">
                 <button class="x" onclick="exitNav()" aria-label="Quitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
                 <div class="to">Vers <b id="navDest">—</b></div>
-                <div style="width:34px"></div>
+                <button class="x vbtn" id="voiceBtn" onclick="toggleVoice()" aria-label="Guidage vocal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+                </button>
+                <button class="x vbtn" id="micBtn" onclick="toggleMic()" aria-label="Commandes vocales">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 19v3"/></svg>
+                </button>
             </div>
             <div class="prog" id="prog"></div>
         </div>
@@ -159,6 +175,9 @@
         </div>
 
         <div class="planbox">
+            <button class="plan-reset" id="planReset" aria-label="Recentrer le plan" onclick="resetMiniView()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            </button>
             <svg id="navSvg" viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg"></svg>
             <div class="floorbadge"><span id="floorName">—</span><span id="stepCount"></span></div>
         </div>
@@ -175,6 +194,9 @@
     </div>
 </div>
 <div class="toast" id="toast"></div>
+
+@include('partials.room-types')
+<script src="{{ asset('js/qrmap-pathfinder.js') }}"></script>
 
 <script>
 // ===== Contexte serveur =====
@@ -208,7 +230,21 @@ let curIdx=0;
 let curDestLabel='';
 
 // ===== Chargement destinations (écran A) =====
+// Bundle de navigation : plan + destinations + tracés enregistrés, en un appel.
+// Permet de calculer les itinéraires sur le téléphone (QRMapPathfinder).
+let BUNDLE=null;
 async function loadDestinations(){
+    try{
+        const res=await fetch(`/api/v1/scan/${QR_UUID}/bundle`,{headers:{'Accept':'application/json'}});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        BUNDLE=await res.json();
+        Object.assign(floorsById, BUNDLE.floors||{});   // plan le plus récent (portes incluses)
+        groups=BUNDLE.destinations||[];
+        renderChips();
+        renderDestList();
+        return;
+    }catch(e){ BUNDLE=null; }
+    // Repli : ancien endpoint
     try{
         const res=await fetch(`/api/v1/scan/${QR_UUID}/destinations`);
         const data=await res.json();
@@ -258,13 +294,32 @@ function renderDestList(){
 document.getElementById('q').addEventListener('input',renderDestList);
 
 // ===== Lancement navigation (A -> B) =====
+// Itinéraire : calculé sur le téléphone si le bundle est là, sinon par le serveur.
+async function computeRoute(destId){
+    if(BUNDLE && window.QRMapPathfinder){
+        try{
+            let dest=null;
+            (BUNDLE.destinations||[]).forEach(g=>g.destinations.forEach(d=>{ if(d.id===destId) dest=d; }));
+            const r = dest && QRMapPathfinder.route({
+                floors:   BUNDLE.floors,
+                qr:       BUNDLE.qr,
+                dest:     dest,
+                override: (BUNDLE.overrides||{})[destId] || null,
+            });
+            if(r) return r;
+        }catch(e){ console.warn('Calcul local impossible, repli serveur', e); }
+    }
+    const res=await fetch('/api/v1/navigate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uuid:QR_UUID,destination_id:destId})});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    return res.json();
+}
 async function startNavigation(destId,label){
     curDestLabel=label;
     try{
-        const res=await fetch('/api/v1/navigate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uuid:QR_UUID,destination_id:destId})});
-        const data=await res.json();
+        const data=await computeRoute(destId);
         curSteps=buildSteps(data);
         curIdx=0;
+        lastSpokenIdx=-1;
         document.getElementById('navDest').textContent=label;
         document.getElementById('home').style.display='none';
         document.getElementById('nav').classList.add('show');
@@ -272,6 +327,9 @@ async function startNavigation(destId,label){
     }catch(e){toast('Erreur de calcul d\'itinéraire');}
 }
 function exitNav(){
+    try{speechSynthesis.cancel();}catch(e){}
+    recogOn=false;stopRecog();
+    const mb=document.getElementById('micBtn');if(mb)mb.classList.remove('on');
     document.getElementById('nav').classList.remove('show');
     document.getElementById('home').style.display='flex';
     curSteps=[];curIdx=0;
@@ -286,11 +344,39 @@ function turnAngle(a,b,c){
 }
 function roundDist(m){return Math.max(5,Math.round(m/5)*5);}
 
+// ===== Réglages de génération des étapes =====
+const TURN_MIN_ANGLE = 35;   // degrés : en-dessous, ce n'est pas un vrai virage
+const SIMPLIFY_EPS   = 1.2;  // % : tolérance de simplification du tracé (Douglas-Peucker)
+const MIN_STRAIGHT_M = 4;    // mètres : une ligne droite plus courte est fusionnée avec le virage
+
+// Simplification Douglas-Peucker : élimine les micro-zigzags de la grille A*
+function perpDist(p,a,b){
+    const dx=b.x-a.x,dy=b.y-a.y;
+    const l=Math.hypot(dx,dy);
+    if(!l)return Math.hypot(p.x-a.x,p.y-a.y);
+    return Math.abs(dy*p.x-dx*p.y+b.x*a.y-b.y*a.x)/l;
+}
+function simplifyPath(pts,eps){
+    if(pts.length<3)return pts;
+    let di=0,dm=0;
+    const a=pts[0],b=pts[pts.length-1];
+    for(let i=1;i<pts.length-1;i++){
+        const d=perpDist(pts[i],a,b);
+        if(d>dm){dm=d;di=i;}
+    }
+    if(dm>eps){
+        const left=simplifyPath(pts.slice(0,di+1),eps);
+        const right=simplifyPath(pts.slice(di),eps);
+        return left.slice(0,-1).concat(right);
+    }
+    return [a,b];
+}
+
 function buildSteps(data){
     const segs=data.segments||[];
     const steps=[];
     segs.forEach((seg,si)=>{
-        const pts=(seg.path||[]).map(p=>({x:+p.x,y:+p.y}));
+        const pts=simplifyPath((seg.path||[]).map(p=>({x:+p.x,y:+p.y})), SIMPLIFY_EPS);
         const fid=seg.floor_id;
         if(pts.length>=2){
             let accum=0,startPt=pts[0];
@@ -299,14 +385,17 @@ function buildSteps(data){
                 const next=pts[i+1];
                 if(next){
                     const ang=turnAngle(pts[i-1],pts[i],next);
-                    if(Math.abs(ang)>25){
-                        steps.push({type:'straight',dist:accum,floorId:fid,at:pts[i],from:startPt,path:pts});
+                    if(Math.abs(ang)>TURN_MIN_ANGLE){
+                        // une ligne droite trop courte est fusionnée avec le virage
+                        if(accum>=MIN_STRAIGHT_M){
+                            steps.push({type:'straight',dist:accum,floorId:fid,at:pts[i],from:startPt,path:pts});
+                        }
                         steps.push({type:ang>0?'right':'left',floorId:fid,at:pts[i],from:pts[i],path:pts});
                         accum=0;startPt=pts[i];
                     }
                 }
             }
-            if(accum>1){
+            if(accum>=2){
                 steps.push({type:'straight',dist:accum,floorId:fid,at:pts[pts.length-1],from:startPt,path:pts,lastOfSeg:true});
             }
         }
@@ -340,6 +429,8 @@ const LABELS={
 function drawStep(){
     const s=curSteps[curIdx];if(!s)return;
     const [t,d]=LABELS[s.type](s);
+    const instrEl=document.querySelector('.instr');
+    if(instrEl){instrEl.classList.remove('anim');void instrEl.offsetWidth;instrEl.classList.add('anim');}
     document.getElementById('instrIc').innerHTML=ICONS[s.type];
     document.getElementById('instrT').textContent=t;
     document.getElementById('instrD').textContent=d;
@@ -356,12 +447,14 @@ function drawStep(){
     document.getElementById('floorName').innerHTML=fl?('Niveau : <b>'+(fl.label||('N'+fl.level))+'</b>'):'';
     document.getElementById('stepCount').textContent=`Étape ${curIdx+1} / ${curSteps.length}`;
 
+    miniView={tx:0,ty:0,s:1};
     drawMiniPlan(s);
     renderStepsList();
 
     document.getElementById('btnPrev').disabled=curIdx===0;
     const next=document.getElementById('btnNext');
     next.textContent=curIdx===curSteps.length-1?'Terminer':'Étape suivante';
+    if(voiceOn&&lastSpokenIdx!==curIdx){lastSpokenIdx=curIdx;speakCurrent();}
 }
 
 // ===== Mini-plan de l'étage avec le tracé + repère de l'étape =====
@@ -393,6 +486,20 @@ function drawMiniPlan(step){
         if(r.shape==='circle')h+=`<ellipse cx="${x+w/2}" cy="${y+hh/2}" rx="${w/2}" ry="${hh/2}" fill="${fill}" stroke="${st}"/>`;
         else if(r.shape==='poly'&&Array.isArray(r.points)&&r.points.length>=3){const pts=r.points.map(p=>`${sx(p[0])},${sy(p[1])}`).join(' ');h+=`<polygon points="${pts}" fill="${fill}" stroke="${st}"/>`;}
         else h+=`<rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="4" fill="${fill}" stroke="${st}"/>`;
+
+        // ── Décor : teinte + icône selon le type de pièce (visuel uniquement) ──
+        const kind = (typeof roomKind==='function') ? roomKind(r) : null;
+        if(kind){
+            if(kind.tint && kind.tint!=='transparent'){
+                if(r.shape==='circle')h+=`<ellipse cx="${x+w/2}" cy="${y+hh/2}" rx="${w/2}" ry="${hh/2}" fill="${kind.tint}" stroke="none"/>`;
+                else if(r.shape==='poly'&&Array.isArray(r.points)&&r.points.length>=3){const pts=r.points.map(p=>`${sx(p[0])},${sy(p[1])}`).join(' ');h+=`<polygon points="${pts}" fill="${kind.tint}" stroke="none"/>`;}
+                else h+=`<rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="4" fill="${kind.tint}" stroke="none"/>`;
+            }
+            const isz=Math.max(10,Math.min(26,Math.min(w,hh)*0.4));
+            if(w>26 && hh>22){
+                h+=`<g transform="translate(${x+w/2-isz/2} ${y+hh/2-isz/2}) scale(${isz/24})"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${MUT}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.45">${kind.icon}</svg></g>`;
+            }
+        }
 
         // Nom affiché UNIQUEMENT si : zone commune, OU salle de départ (QR), OU salle d'arrivée (destination)
         const isStart = inRoom(startPt,r);
@@ -426,8 +533,94 @@ function drawMiniPlan(step){
         else if(step.type==='arrive')h+=`<g transform="translate(${px} ${py})"><circle r="12" fill="${AC}"/><circle r="4.5" fill="${BG}"/></g>`;
         else h+=`<g transform="translate(${px} ${py})"><circle r="13" fill="${AC}" opacity="0.25"><animate attributeName="r" values="10;16;10" dur="1.6s" repeatCount="indefinite"/></circle><circle r="7" fill="${AC}"/></g>`;
     }
-    svg.innerHTML=h;
+    svg.innerHTML='<g id="miniVp">'+h+'</g>';
+    applyMiniView();
 }
+// ===== Zoom / déplacement du mini-plan =====
+let miniView={tx:0,ty:0,s:1};
+const MINI_W=600, MINI_H=380;
+function applyMiniView(){
+    const vp=document.getElementById('miniVp');
+    if(vp)vp.setAttribute('transform',`translate(${miniView.tx} ${miniView.ty}) scale(${miniView.s})`);
+    const rb=document.getElementById('planReset');
+    if(rb)rb.classList.toggle('show', miniView.s>1.01);
+}
+function clampMiniView(){
+    miniView.s=Math.max(1,Math.min(4,miniView.s));
+    // le contenu ne sort jamais du cadre
+    miniView.tx=Math.min(0,Math.max(MINI_W*(1-miniView.s),miniView.tx));
+    miniView.ty=Math.min(0,Math.max(MINI_H*(1-miniView.s),miniView.ty));
+}
+function resetMiniView(){miniView={tx:0,ty:0,s:1};applyMiniView();}
+function miniPt(clientX,clientY){
+    const el=document.getElementById('navSvg');const r=el.getBoundingClientRect();
+    return {x:(clientX-r.left)*MINI_W/r.width, y:(clientY-r.top)*MINI_H/r.height};
+}
+function miniZoomAt(cx,cy,f){
+    const ns=Math.max(1,Math.min(4,miniView.s*f));
+    const k=ns/miniView.s;
+    miniView.tx=cx-(cx-miniView.tx)*k;
+    miniView.ty=cy-(cy-miniView.ty)*k;
+    miniView.s=ns;
+    clampMiniView();applyMiniView();
+}
+(function(){
+    const el=document.getElementById('navSvg');
+    let mdrag=null, mpinch=null, mTapT=0, mMoved=0;
+    el.addEventListener('pointerdown',e=>{
+        if(mpinch)return;
+        mdrag={x:e.clientX,y:e.clientY,tx:miniView.tx,ty:miniView.ty};
+        mMoved=0;
+        el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove',e=>{
+        if(!mdrag||mpinch)return;
+        const r=el.getBoundingClientRect();
+        const kx=MINI_W/r.width, ky=MINI_H/r.height;
+        miniView.tx=mdrag.tx+(e.clientX-mdrag.x)*kx;
+        miniView.ty=mdrag.ty+(e.clientY-mdrag.y)*ky;
+        mMoved+=Math.abs(e.movementX||0)+Math.abs(e.movementY||0);
+        clampMiniView();applyMiniView();
+    });
+    el.addEventListener('pointerup',e=>{
+        mdrag=null;
+        // double-tap : zoomer sur le point (ou réinitialiser si déjà très zoomé)
+        if(mMoved<8){
+            const now=Date.now();
+            if(now-mTapT<300){
+                if(miniView.s>=3.5)resetMiniView();
+                else{const p=miniPt(e.clientX,e.clientY);miniZoomAt(p.x,p.y,1.8);}
+                mTapT=0;return;
+            }
+            mTapT=now;
+        }
+    });
+    // pinch à deux doigts, ancré au point médian
+    el.addEventListener('touchstart',e=>{
+        if(e.touches.length===2){
+            const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+            const mid=miniPt((e.touches[0].clientX+e.touches[1].clientX)/2,(e.touches[0].clientY+e.touches[1].clientY)/2);
+            mpinch={d,s:miniView.s,tx:miniView.tx,ty:miniView.ty,mid};
+            mdrag=null;
+        }
+    },{passive:false});
+    el.addEventListener('touchmove',e=>{
+        if(mpinch&&e.touches.length===2){
+            e.preventDefault();
+            const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+            const ns=Math.max(1,Math.min(4,mpinch.s*(d/mpinch.d)));
+            const k=ns/mpinch.s;
+            miniView.tx=mpinch.mid.x-(mpinch.mid.x-mpinch.tx)*k;
+            miniView.ty=mpinch.mid.y-(mpinch.mid.y-mpinch.ty)*k;
+            miniView.s=ns;
+            clampMiniView();applyMiniView();
+        }
+    },{passive:false});
+    el.addEventListener('touchend',e=>{if(e.touches.length<2)mpinch=null;});
+    // molette (test desktop)
+    el.addEventListener('wheel',e=>{e.preventDefault();const p=miniPt(e.clientX,e.clientY);miniZoomAt(p.x,p.y,e.deltaY<0?1.15:0.87);},{passive:false});
+})();
+
 function nearestIdx(path,pt){let bi=0,bd=Infinity;path.forEach((p,i)=>{const d=Math.hypot(p.x-pt.x,p.y-pt.y);if(d<bd){bd=d;bi=i;}});return bi;}
 function escapeXml(s){return String(s).replace(/[<>&'"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'}[c]));}
 
@@ -445,10 +638,98 @@ function renderStepsList(){
     });
 }
 
+// ===== Swipe gauche/droite pour naviguer entre les étapes =====
+(function(){
+    const navEl=document.getElementById('nav');
+    let sx=null,sy=null;
+    navEl.addEventListener('touchstart',e=>{
+        if(e.touches.length!==1)return;
+        // ne pas capturer les swipes démarrés sur les boutons ou la liste repliable
+        if(e.target.closest('button')||e.target.closest('details')||e.target.closest('.planbox'))return;
+        sx=e.touches[0].clientX;sy=e.touches[0].clientY;
+    },{passive:true});
+    navEl.addEventListener('touchend',e=>{
+        if(sx===null)return;
+        const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+        sx=null;sy=null;
+        if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5){
+            if(dx<0)nextStep(); else prevStep();
+        }
+    },{passive:true});
+})();
+
+// ===== Guidage vocal (synthèse) =====
+let voiceOn=false, lastSpokenIdx=-1;
+function speak(txt,force){
+    if((!voiceOn&&!force)||!('speechSynthesis' in window))return;
+    try{
+        speechSynthesis.cancel();
+        const u=new SpeechSynthesisUtterance(txt);
+        u.lang='fr-FR';u.rate=1;
+        speechSynthesis.speak(u);
+    }catch(e){}
+}
+function speakCurrent(force){
+    const s=curSteps[curIdx];if(!s)return;
+    const [t,d]=LABELS[s.type](s);
+    speak(t+'. '+d,force);
+}
+function toggleVoice(){
+    voiceOn=!voiceOn;
+    document.getElementById('voiceBtn').classList.toggle('on',voiceOn);
+    if(voiceOn){lastSpokenIdx=curIdx;speakCurrent();toast('Guidage vocal activé');}
+    else{try{speechSynthesis.cancel();}catch(e){}toast('Guidage vocal coupé');}
+}
+
+// ===== Commandes vocales (reconnaissance) =====
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recogOn=false, recog=null;
+function handleVoiceCommand(txt){
+    txt=(txt||'').toLowerCase();
+    if(/suivant|prochain|avance|continue/.test(txt)){nextStep();return true;}
+    if(/pr[ée]c[ée]dent|retour|arri[èe]re/.test(txt)){prevStep();return true;}
+    if(/r[ée]p[èe]te|r[ée]p[ée]ter|redis/.test(txt)){speakCurrent(true);return true;}
+    if(/stop|quitter|annule|terminer?/.test(txt)){exitNav();return true;}
+    return false;
+}
+function startRecog(){
+    try{
+        recog=new SR();
+        recog.lang='fr-FR';recog.continuous=true;recog.interimResults=false;
+        recog.onresult=e=>{
+            const t=e.results[e.results.length-1][0].transcript;
+            if(handleVoiceCommand(t))toast('« '+t.trim()+' »');
+        };
+        recog.onend=()=>{ if(recogOn){ try{recog.start();}catch(e){} } };
+        recog.onerror=ev=>{
+            if(ev.error==='not-allowed'||ev.error==='service-not-allowed'){
+                recogOn=false;
+                document.getElementById('micBtn').classList.remove('on');
+                toast('Accès au micro refusé');
+            }
+        };
+        recog.start();
+    }catch(e){recogOn=false;toast('Micro indisponible');}
+}
+function stopRecog(){
+    try{ if(recog){recog.onend=null;recog.stop();} }catch(e){}
+    recog=null;
+}
+function toggleMic(){
+    if(!SR){toast('Commandes vocales non supportées sur ce navigateur');return;}
+    recogOn=!recogOn;
+    document.getElementById('micBtn').classList.toggle('on',recogOn);
+    if(recogOn){startRecog();toast('Dites : « suivant », « précédent », « répète », « stop »');}
+    else{stopRecog();toast('Micro coupé');}
+}
+// masquer le bouton micro si l'API n'existe pas
+if(!SR){const mb=document.getElementById('micBtn');if(mb)mb.style.display='none';}
+
 function nextStep(){if(curIdx<curSteps.length-1){curIdx++;drawStep();}else{toast('Arrivé à destination 🎉');exitNav();}}
 function prevStep(){if(curIdx>0){curIdx--;drawStep();}}
 
 loadDestinations();
 </script>
+@include('partials.guide-ia')
 </body>
 </html>

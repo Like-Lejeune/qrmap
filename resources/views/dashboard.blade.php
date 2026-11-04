@@ -87,7 +87,7 @@
     <div class="card" style="grid-column: 1/-1; text-align: center; padding: 3rem;">
         <div style="font-size: 2rem; margin-bottom: 1rem;">🏗</div>
         <div style="color: var(--muted); margin-bottom: 1rem;">Aucun site encore créé</div>
-        <a href="{{ route('sites.create') }}" class="btn btn-primary">Créer votre premier site</a>
+        
     </div>
     @endforelse
 </div>

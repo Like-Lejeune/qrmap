@@ -11,6 +11,7 @@
     window.__URLS__ = {
         store:  "{{ url('/plan-editor') }}",
         update: "{{ url('/plan-editor') }}",
+        vision: "{{ url('/plan-editor/vision') }}",
     };
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,6 +126,15 @@
     .qr-m{cursor:move}
     .qr-m.sel rect{stroke:var(--accent);stroke-width:2}
     .ghost-rect{fill:var(--soft);stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3;pointer-events:none}
+    .door-m{fill:var(--accent);stroke:var(--bg2);stroke-width:1.5;pointer-events:none}
+    .bg-plan{pointer-events:none}
+    .vision-drop{border:1.5px dashed var(--border2);border-radius:10px;padding:22px;text-align:center;color:var(--muted);font-size:13px;cursor:pointer;display:block}
+    .vision-drop:hover{border-color:var(--accent);color:var(--text)}
+    .vision-drop img{max-width:100%;max-height:220px;border-radius:6px;margin-top:10px;display:block;margin-inline:auto}
+    .vision-warn{margin-top:10px;font-size:12px;color:var(--warn);line-height:1.6}
+    .vision-status{font-size:12px;color:var(--muted);margin-top:10px;min-height:18px}
+    .radio-row{display:flex;gap:16px;margin-top:10px;font-size:13px}
+    .radio-row label{display:flex;gap:6px;align-items:center;cursor:pointer}
 
     .item{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);margin-bottom:5px;font-size:12px;cursor:pointer}
     .item .tag{font-family:var(--mono);font-size:10px;color:var(--muted)}
@@ -161,6 +171,7 @@
                 <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg>
             </button>
+            <button class="btn" id="visionBtn" title="Le modèle de Meta lit une photo ou un PDF du plan et propose les pièces">✦ Lire un plan (IA)</button>
             <button class="btn" id="importBtn">Importer JSON</button>
             <button class="btn" id="exportBtn">Exporter</button>
             <button class="btn accent" id="saveBtn">Enregistrer</button>
@@ -207,6 +218,7 @@
             <span class="pill" id="floorPill">RDC</span>
             <span class="hint" id="stageHint">Glissez pour dessiner une pièce, ou sélectionnez un élément pour l'éditer.</span>
             <span class="spacer"></span>
+            <label class="chk" id="bgToggle" style="display:none"><input type="checkbox" id="bgChk" checked> Plan importé en fond</label>
             <label class="chk"><input type="checkbox" id="snapChk" checked> Aimanter à la grille</label>
         </div>
         <div class="canvas-wrap">
@@ -268,6 +280,13 @@
                 <input class="f" id="dDesc">
             </div>
 
+            <div class="sec-title">Porte (point d'arrivée de la navigation)</div>
+            <div class="zorder">
+                <button class="btn sm" id="doorPlaceBtn" title="Cliquez ensuite sur un bord de la pièce">Placer la porte</button>
+                <button class="btn sm" id="doorClearBtn">Retirer</button>
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px" id="doorInfo">Aucune porte : la navigation vise le centre.</div>
+
             <button class="btn danger" id="delRoomBtn" style="width:100%;margin-top:16px">Supprimer la pièce</button>
         </div>
 
@@ -305,6 +324,35 @@
         <div class="modal-foot">
             <button class="btn" id="copyBtn">Copier</button>
             <button class="btn accent" id="downloadBtn">Télécharger</button>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" id="visionOverlay">
+    <div class="modal" style="max-width:560px">
+        <div class="modal-head">
+            <h3>Lire un plan avec l'IA</h3>
+            <button class="btn ghost icon" id="visionClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Photo du plan d'évacuation, scan ou PDF d'architecte. Le modèle de Meta propose les pièces de l'étage actif ; vous corrigez ensuite, l'image restant affichée en fond.</p>
+            <label class="vision-drop" id="visionDrop">
+                <input type="file" id="visionFile" accept="image/jpeg,image/png,image/webp,application/pdf" style="display:none">
+                <span id="visionDropTxt">Choisir une image ou un PDF (1re page)</span>
+                <img id="visionPreview" alt="" style="display:none">
+            </label>
+            <label class="f" style="margin-top:12px">Précision (facultatif)</label>
+            <input class="f" id="visionHint" maxlength="300" placeholder="Ex. : rez-de-chaussée, bâtiment de 40 × 25 m">
+            <div class="radio-row">
+                <label><input type="radio" name="visionMode" value="replace" checked> Remplacer les pièces de l'étage</label>
+                <label><input type="radio" name="visionMode" value="append"> Ajouter aux pièces existantes</label>
+            </div>
+            <div class="vision-status" id="visionStatus"></div>
+            <div class="vision-warn" id="visionWarn"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn" id="visionCancel">Annuler</button>
+            <button class="btn accent" id="visionRun" disabled>Lire le plan</button>
         </div>
     </div>
 </div>
@@ -384,6 +432,7 @@ function render(){
     svg.appendChild(defs);
     add('rect',{x:0,y:0,width:VW,height:VH,fill:'url(#g)'});
     add('rect',{x:1,y:1,width:VW-2,height:VH-2,rx:8,fill:'none',stroke:'var(--border)','stroke-width':1});
+    drawBgPlan();
     // Ordre du tableau = ordre d'empilement : index 0 dessiné en premier (derrière),
     // dernier index dessiné en dernier (devant).
     floor().rooms.forEach(r=>drawRoom(r));
@@ -428,7 +477,11 @@ function drawRoom(r){
         if(w>34 && h>28){
             const ic=add('g',{class:'room-ic','pointer-events':'none',
                 transform:`translate(${x+w/2-isz/2} ${y+h/2-isz/2}) scale(${isz/24})`},g);
+<<<<<<< Updated upstream
             ic.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">${kind.icon}</svg>`;
+=======
+            ic.innerHTML=`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">${kind.icon}</svg>`;
+>>>>>>> Stashed changes
         }
     }
     const nm=r.name||'';
@@ -439,6 +492,7 @@ function drawRoom(r){
     }
     add('text',{class:'badge',x:x+5,y:y+5},g).textContent=(r.id||'');
     if(r._dest)add('circle',{class:'dest-star',cx:x+w-12,cy:y+10,r:4},g);
+    if(r.door)add('circle',{class:'door-m',cx:pxX(r.door.x),cy:pxY(r.door.y),r:5},g);
     if(sel&&sel.kind==='room'&&sel.id===r._id)add('rect',{class:'handle',x:x+w-7,y:y+h-7,width:10,height:10,rx:2,'data-h':'br'},g);
     g.addEventListener('pointerdown',e=>onRoomDown(e,r));
 }
@@ -463,6 +517,7 @@ svg.addEventListener('pointerdown',e=>{
     }
     if(e.target.closest('.rrect')||e.target.closest('.qr-m'))return;
     const p=svgPt(e);
+    if(tool==='door'){placeDoorAt(p);return;}
     if(tool==='room'){
         drag={mode:'draw',x0:p.x,y0:p.y,ghost:add('rect',{class:'ghost-rect',x:p.x,y:p.y,width:0,height:0,rx:5})};
         svg.setPointerCapture(e.pointerId);
@@ -496,6 +551,7 @@ svg.addEventListener('dblclick',e=>{ if(tool==='poly'){e.preventDefault();finish
 function onRoomDown(e,r){
     e.stopPropagation();
     if(tool==='qr')return;
+    if(tool==='door'){placeDoorAt(svgPt(e));return;}
     select('room',r._id);
     const p=svgPt(e);
     if(e.target.classList.contains('handle'))drag={mode:'resize',r,startW:r.w,startH:r.h,px:p.x,py:p.y};
@@ -526,6 +582,7 @@ svg.addEventListener('pointermove',e=>{
     }else if(drag.mode==='resize'){
         drag.r.w=clamp(snapV(drag.startW+pcX(p.x-drag.px)),2,100-drag.r.x);
         drag.r.h=clamp(snapV(drag.startH+pcY(p.y-drag.py)),2,100-drag.r.y);
+        if(drag.r.door)drag.r.door=snapToEdge(drag.r,drag.r.door.x,drag.r.door.y);
         render();syncProps();
     }else if(drag.mode==='moveqr'){
         drag.q.pos_x=clamp(snapV(pcX(p.x-drag.dx)),0,100);
@@ -536,10 +593,26 @@ svg.addEventListener('pointermove',e=>{
 
 // Déplace aussi les sommets d'un polygone quand on bouge sa boîte englobante.
 function movePolyWithBox(r,nx,ny){
+    const ddx=nx-r.x,ddy=ny-r.y;
     if(r.shape==='poly'&&Array.isArray(r.points)){
-        const ox=r.x,oy=r.y,ddx=nx-ox,ddy=ny-oy;
         r.points=r.points.map(([px,py])=>[+(px+ddx).toFixed(1),+(py+ddy).toFixed(1)]);
     }
+    // La porte se déplace avec sa pièce
+    if(r.door)r.door={x:+(r.door.x+ddx).toFixed(1),y:+(r.door.y+ddy).toFixed(1)};
+}
+// Recolle un point sur le bord le plus proche d'une pièce (même logique que le serveur)
+function snapToEdge(r,x,y){
+    const cx=clamp(x,r.x,r.x+r.w),cy=clamp(y,r.y,r.y+r.h);
+    const d={l:cx-r.x,r:r.x+r.w-cx,t:cy-r.y,b:r.y+r.h-cy};
+    const m=Math.min(d.l,d.r,d.t,d.b);
+    const o=m===d.l?{x:r.x,y:cy}:m===d.r?{x:r.x+r.w,y:cy}:m===d.t?{x:cx,y:r.y}:{x:cx,y:r.y+r.h};
+    return {x:+o.x.toFixed(1),y:+o.y.toFixed(1)};
+}
+function placeDoorAt(p){
+    const r=selRoom();
+    if(!r){toast('Sélectionnez d\'abord la pièce');setTool('select');return;}
+    r.door=snapToEdge(r,pcX(p.x),pcY(p.y));
+    setTool('select');render();syncProps();toast('Porte placée');
 }
 
 svg.addEventListener('pointerup',()=>{
@@ -604,6 +677,7 @@ function syncProps(){
         if(r._dest){$('#dLabel').value=r._dest.label||r.name||'';$('#dCat').value=r._dest.category||'service';$('#dDesc').value=r._dest.description||'';}
     }
     if(q){$('#qLabel').value=q.label||'';$('#qX').value=q.pos_x;$('#qY').value=q.pos_y;}
+    if(r)$('#doorInfo').textContent=r.door?`Porte en (${r.door.x} %, ${r.door.y} %) : la navigation s'arrête ici.`:'Aucune porte : la navigation vise le centre.';
 }
 
 ['rName','rId','rType','rShape','rX','rY','rW','rH'].forEach(id=>{
@@ -733,7 +807,7 @@ function setTool(t){
     if(tool==='poly'&&t!=='poly'){polyPts=[];}
     tool=t;
     document.querySelectorAll('.tool').forEach(b=>b.classList.toggle('active',b.dataset.tool===t));
-    const hints={select:'Glissez une pièce pour la déplacer, utilisez la poignée pour redimensionner. Les pièces peuvent se superposer.',room:'Glissez sur le plan pour dessiner une pièce.',qr:'Cliquez sur le plan pour poser un QR code.',poly:'Cliquez pour ajouter des sommets. Double-clic (ou Entrée) pour terminer, Échap pour annuler.'};
+    const hints={select:'Glissez une pièce pour la déplacer, utilisez la poignée pour redimensionner. Les pièces peuvent se superposer.',room:'Glissez sur le plan pour dessiner une pièce.',qr:'Cliquez sur le plan pour poser un QR code.',poly:'Cliquez pour ajouter des sommets. Double-clic (ou Entrée) pour terminer, Échap pour annuler.',door:'Cliquez sur le bord de la pièce sélectionnée, là où se trouve son entrée.'};
     $('#stageHint').textContent=hints[t];
 }
 document.querySelectorAll('.tool').forEach(b=>b.onclick=()=>setTool(b.dataset.tool));
@@ -796,6 +870,7 @@ function buildJSON(){
             const o={id:r.id,name:r.name||'',x:r.x,y:r.y,w:r.w,h:r.h};
             if(r.shape&&r.shape!=='rect')o.shape=r.shape;
             if(r.shape==='poly'&&r.points)o.points=r.points;
+            if(r.door)o.door={x:r.door.x,y:r.door.y};
             return o;
         })})),
         destinations:state.floors.flatMap(f=>f.rooms.filter(r=>r._dest).map((r,idx)=>({floor_level:f.level,room_id:r.id,label:r._dest.label||r.name||r.id,category:r._dest.category,description:r._dest.description,sort_order:idx+1,is_active:true}))),
@@ -815,6 +890,7 @@ function buildPHP(){
             let extra='';
             if(r.shape&&r.shape!=='rect')extra+=",'shape'=>'"+r.shape+"'";
             if(r.shape==='poly'&&r.points)extra+=",'points'=>"+JSON.stringify(r.points);
+            if(r.door)extra+=",'door'=>['x'=>"+r.door.x+",'y'=>"+r.door.y+"]";
             s+=`                ['id'=>'${php(r.id)}','name'=>'${php(r.name||'')}','x'=>${r.x},'y'=>${r.y},'w'=>${r.w},'h'=>${r.h}${extra}],\n`;
         });
         s+=`            ],\n        ]);\n\n`;
@@ -864,7 +940,7 @@ function loadFrom(data){
     state.site={name:'',address:'',latitude:'',longitude:'',description:'',...(data.site||{})};
     const m=(data.building&&data.building.model_3d)||{};
     state.building={name:(data.building&&data.building.name)||'',width_m:m.width_m||40,depth_m:m.depth_m||25,floor_height_m:m.floor_height_m||3.3};
-    state.floors=(data.floors||[]).map(f=>({level:f.level,label:f.label,rooms:(f.rooms||[]).map(r=>({_id:uid(),id:r.id,name:r.name||'',x:r.x,y:r.y,w:r.w,h:r.h,shape:r.shape||'rect',points:r.points||undefined}))}));
+    state.floors=(data.floors||[]).map(f=>({level:f.level,label:f.label,rooms:(f.rooms||[]).map(r=>({_id:uid(),id:r.id,name:r.name||'',x:r.x,y:r.y,w:r.w,h:r.h,shape:r.shape||'rect',points:r.points||undefined,door:(r.door&&isFinite(r.door.x)&&isFinite(r.door.y))?{x:+r.door.x,y:+r.door.y}:undefined}))}));
     if(!state.floors.length)state.floors=[{level:0,label:'Rez-de-chaussée',rooms:[]}];
     (data.destinations||[]).forEach(d=>{
         const f=state.floors.find(fl=>fl.level===d.floor_level);if(!f)return;
@@ -922,6 +998,133 @@ async function saveToServer(){
     }
 }
 $('#saveBtn').onclick=saveToServer;
+
+// ═════════ Portes ═════════
+$('#doorPlaceBtn').onclick=()=>{if(!selRoom()){toast('Sélectionnez une pièce');return;}setTool('door');};
+$('#doorClearBtn').onclick=()=>{const r=selRoom();if(!r)return;delete r.door;render();syncProps();};
+
+// ═════════ Plan importé en fond (calque de correction) ═════════
+// Gardé en mémoire uniquement (non enregistré), un par étage.
+const bgByFloor={};
+function drawBgPlan(){
+    const bg=bgByFloor[activeFloor];
+    $('#bgToggle').style.display=bg?'':'none';
+    if(!bg||!$('#bgChk').checked)return;
+    // bbox = contour du bâtiment dans l'image (en %) → on étire l'image pour que
+    // ce contour recouvre exactement le cadre 0-100 % du plan
+    const b=bg.bbox, iw=VW*100/b.w, ih=VH*100/b.h;
+    add('image',{class:'bg-plan',href:bg.url,x:-b.x/100*iw,y:-b.y/100*ih,width:iw,height:ih,preserveAspectRatio:'none',opacity:.35});
+}
+$('#bgChk').onchange=render;
+
+// ═════════ Lecture de plan par l'IA ═════════
+let visionImage=null;
+const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+
+function loadScript(src){return new Promise((ok,ko)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>ko(new Error('Chargement impossible : '+src));document.head.appendChild(s);});}
+
+// Image réduite (côté max 2000 px, JPEG) : envoi plus rapide, lecture suffisante
+function canvasToJpeg(c){
+    const k=Math.min(1,2000/Math.max(c.width,c.height));
+    if(k===1)return c.toDataURL('image/jpeg',0.85);
+    const o=document.createElement('canvas');o.width=Math.round(c.width*k);o.height=Math.round(c.height*k);
+    const g=o.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,o.width,o.height);g.drawImage(c,0,0,o.width,o.height);
+    return o.toDataURL('image/jpeg',0.85);
+}
+async function fileToImage(file){
+    if(file.type==='application/pdf'){
+        if(!window.pdfjsLib){await loadScript(PDFJS+'pdf.min.js');pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+'pdf.worker.min.js';}
+        const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+        const page=await pdf.getPage(1);
+        const v1=page.getViewport({scale:1});
+        const vp=page.getViewport({scale:Math.min(4,2000/Math.max(v1.width,v1.height))});
+        const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;
+        const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);
+        await page.render({canvasContext:g,viewport:vp}).promise;
+        return canvasToJpeg(c);
+    }
+    const url=URL.createObjectURL(file);
+    try{
+        const img=await new Promise((ok,ko)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ko(new Error('Image illisible'));i.src=url;});
+        const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;
+        const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(img,0,0);
+        return canvasToJpeg(c);
+    }finally{URL.revokeObjectURL(url);}
+}
+
+function openVision(){
+    visionImage=null;$('#visionFile').value='';$('#visionPreview').style.display='none';
+    $('#visionDropTxt').textContent='Choisir une image ou un PDF (1re page)';
+    $('#visionStatus').textContent='';$('#visionWarn').innerHTML='';$('#visionRun').disabled=true;
+    $('#visionOverlay').classList.add('show');
+}
+function closeVision(){$('#visionOverlay').classList.remove('show');}
+$('#visionBtn').onclick=openVision;
+$('#visionClose').onclick=$('#visionCancel').onclick=closeVision;
+
+$('#visionFile').onchange=async e=>{
+    const f=e.target.files[0];if(!f)return;
+    if(f.size>25*1024*1024){toast('Fichier trop lourd (25 Mo max)');return;}
+    $('#visionStatus').textContent='Préparation de l\'image…';$('#visionRun').disabled=true;
+    try{
+        visionImage=await fileToImage(f);
+        $('#visionPreview').src=visionImage;$('#visionPreview').style.display='block';
+        $('#visionDropTxt').textContent=f.name;
+        $('#visionStatus').textContent='Prêt. La lecture prend en général 20 à 60 secondes.';
+        $('#visionRun').disabled=false;
+    }catch(err){visionImage=null;$('#visionStatus').textContent='Erreur : '+err.message;}
+};
+
+$('#visionRun').onclick=async()=>{
+    if(!visionImage)return;
+    const mode=document.querySelector('input[name="visionMode"]:checked').value;
+    if(mode==='replace'&&floor().rooms.length&&!confirm('Remplacer les '+floor().rooms.length+' pièces de cet étage ?'))return;
+    const btn=$('#visionRun');btn.disabled=true;
+    $('#visionStatus').textContent='Le modèle lit le plan…';$('#visionWarn').innerHTML='';
+    try{
+        const res=await fetch(window.__URLS__.vision,{
+            method:'POST',
+            headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},
+            body:JSON.stringify({image:visionImage,level:floor().level,hint:$('#visionHint').value||null}),
+        });
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok)throw new Error(data.message||('Erreur '+res.status));
+        applyVision(data,mode);
+    }catch(err){$('#visionStatus').textContent='Échec : '+err.message;}
+    finally{btn.disabled=false;}
+};
+
+function applyVision(data,mode){
+    const rooms=Array.isArray(data.rooms)?data.rooms:[];
+    if(!rooms.length){
+        $('#visionStatus').textContent='Aucune pièce détectée.';
+        $('#visionWarn').innerHTML=(data.warnings||[]).map(w=>'⚠ '+escHtml(w)).join('<br>');
+        return;
+    }
+    if(mode==='replace'){
+        const ids=new Set(floor().rooms.map(r=>r._id));
+        floor().rooms=[];
+        if(sel&&ids.has(sel.id))sel=null;
+    }
+    rooms.forEach(r=>{
+        const room={_id:uid(),id:nextRoomId(),name:r.name||'',x:+r.x,y:+r.y,w:+r.w,h:+r.h,shape:'rect'};
+        if(r.door)room.door={x:+r.door.x,y:+r.door.y};
+        floor().rooms.push(room);
+    });
+    // Dimensions réelles : seulement si le modèle a pu les lire (cotes, échelle)
+    const b=data.building||{};
+    if(b.width_m)state.building.width_m=b.width_m;
+    if(b.depth_m)state.building.depth_m=b.depth_m;
+    if(b.width_m||b.depth_m){pushSiteToInputs();updateViewBox();}
+    bgByFloor[activeFloor]={url:visionImage,bbox:data.bbox||{x:0,y:0,w:100,h:100}};
+    $('#bgChk').checked=true;
+    closeVision();render();syncProps();
+    const warns=(data.warnings||[]).length;
+    toast(rooms.length+' pièce(s) importée(s)'+(warns?' — '+warns+' point(s) à vérifier':'')+'. Corrigez en vous aidant du plan en fond.');
+    if(warns)setTimeout(()=>alertWarnings(data.warnings),400);
+}
+function alertWarnings(list){$('#stageHint').textContent='À vérifier : '+list.join(' · ');}
+function escHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 if(window.__INITIAL__){
     try{ loadFrom(window.__INITIAL__); }catch(e){ console.error(e); }
