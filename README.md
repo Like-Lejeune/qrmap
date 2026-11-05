@@ -1,9 +1,9 @@
 # QRMap — GPS stops at the door. QRMap starts there.
 
 **Indoor navigation from a QR code, with an AI guide powered by Meta Muse Spark.**
-Built in Yaoundé, Cameroon · Meta Global AI Developer Hackathon 2026 · Startup track · Theme: *Build for Your World*
+Built in Yaoundé, Cameroon · Meta Global AI Developer Hackathon 2026 · Indie Developer Track · Theme: *Build for Your World*
 
-🎥 Demo video: `<link>` · 🌐 [qrmap.app](https://qrmap.app)
+🎥 Demo video: `https://youtu.be/ms-RgUIeIXw?si=HW059P8RNUYB7l1c` · 🌐 [qrmap.app](https://qrmap.app)
 
 ---
 
